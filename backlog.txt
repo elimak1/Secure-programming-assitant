@@ -1,0 +1,51 @@
+-- set up flask backend
+
+-- Set up Angular project
+
+-- Set up Redis
+
+-- Integrate components
+
+-- Create some ui components for dashboard
+
+--  Implement authentication:
+Login and registrations (3rd party?)
+
+--   LLM integration
+
+--  Feature for searching OWASP or other relevant sutff
+
+--  Implement sanitization and validation 
+
+--  Email verification system
+
+--  Implement rate limiting
+
+--  Admin credentials
+
+--  Chat management - load and display old chats
+
+-- CREATE COMPREHENSIVE documentation
+
+-- Unit testing
+
+
+:::: Security measures
+-- Check OWASP top 10
+-- Penetration testing
+-- Document
+-- Implement monitoring and logging 
+
+
+__________ Additional features
+
+--  Chat sharing
+ - Setting chats to public
+ - Prevent attack angles
+ - Privacy?
+
+--  Integrate text2speech system
+
+--  Integrate speech recognition system
+
+--  Choice of local LLM and user can select that
