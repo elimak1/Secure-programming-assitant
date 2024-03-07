@@ -2,8 +2,6 @@
 
 -- Set up Angular project
 
--- Set up Redis
-
 -- Integrate components
 
 -- Create some ui components for dashboard
