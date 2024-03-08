@@ -40,3 +40,26 @@ p {
 a:hover {
     text-decoration: underline;
 }
+
+button {
+    padding: 0.75rem 1.5rem; 
+    font-size: 1rem; 
+    font-family: $font-primary;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  
+    background-color: $color-primary;
+    color: $color-text;
+  
+    &:hover, &:focus {
+      background-color: darken($color-primary, 10%); 
+      color: $color-text;
+    }
+  
+    &:active {
+      background-color: darken($color-primary, 20%); 
+    }
+
+  }

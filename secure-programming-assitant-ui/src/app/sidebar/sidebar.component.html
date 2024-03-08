@@ -11,4 +11,11 @@
             <li><a href="#">Logout</a></li>
         </ul>
     </nav>
+    <div class="footer">
+        <div class="footer-content">
+            <p *ngIf="username">Logged in as {{username}}</p>
+            <button *ngIf="!username" class="login">Login</button>
+        </div>
+
+    </div>  
 </div>
