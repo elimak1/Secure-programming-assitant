@@ -1,0 +1,39 @@
+// Primary Colors
+$color-primary: #0A8754; // Dark, rich green
+$color-secondary: #16A085; // Medium teal-green
+
+// Accent Colors
+$color-accent1: #2C3E50; // Dark slate for lighter UI elements in dark mode
+$color-accent2: #34495E; // Deep blue-grey, for additional contrast
+
+// Neutral Colors
+$color-light-neutral: #34495E; // Dark blue-grey, slightly lighter than accent1
+$color-dark-neutral: #0e1822; // Very dark navy, almost black, for backgrounds
+$color-medium-neutral: #1A242F; // Dark slate grey, for secondary backgrounds
+
+// Utility Colors
+$color-error: #E74C3C; // Bright red, remains visible in dark mode
+$color-success: #27AE60; // Vibrant green, for success messages
+$color-warning: #F1C40F; // Bright yellow, for warnings
+
+// Text color
+$color-text: #EAECEE; // Soft white, optimizes readability on dark backgrounds
+
+// Typography
+$font-primary: 'Open Sans', sans-serif;
+$font-secondary: 'Roboto', sans-serif;
+
+/* Font Sizes */
+$font-size-base: 1rem; // 16px
+$font-size-lg: 1.25rem; // 20px
+$font-size-xl: 1.5rem; // 24px
+$font-size-xxl: 2rem; // 32px
+
+/* Font Weights */
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+/* Line Heights */
+$line-height-base: 1.6;
+$line-height-heading: 1.4;
+
