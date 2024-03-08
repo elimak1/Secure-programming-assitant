@@ -1,13 +1,13 @@
 -- set up flask backend
 
--- Set up Angular project
+-- Set up Angular project Done
 
 -- Integrate components
 
 -- Create some ui components for dashboard
 
 --  Implement authentication:
-Login and registrations (3rd party?)
+Login and registrations
 
 --   LLM integration
 

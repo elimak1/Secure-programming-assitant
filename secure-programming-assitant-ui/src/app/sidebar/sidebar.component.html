@@ -14,7 +14,7 @@
     <div class="footer">
         <div class="footer-content">
             <p *ngIf="username">Logged in as {{username}}</p>
-            <button *ngIf="!username" class="login">Login</button>
+            <button *ngIf="!username" class="login" (click)="login()">Login</button>
         </div>
 
     </div>  

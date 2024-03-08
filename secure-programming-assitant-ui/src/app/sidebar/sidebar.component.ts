@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,12 +13,16 @@ import { AuthService } from '../services/auth.service';
 export class SidebarComponent {
 
   public username: string | undefined;
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   ngOnInit(){
     this.authService.getLoggedInUser().subscribe(user => {
       this.username = user?.username;
     });
+  }
+
+  login(){
+    this.router.navigate(['/authenticate']);
   }
 }

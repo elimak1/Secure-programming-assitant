@@ -1,0 +1,40 @@
+<div class="registration-form">
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" formControlName="username"> 
+      </div>
+      <div *ngIf="username?.touched && username?.errors" class="error">
+        Username is not valid.
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email">
+      </div>
+      
+      <div *ngIf="email?.touched && email?.errors" class="error">
+        Email is not valid.
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password">
+      </div>
+      <div *ngIf="password?.touched && password?.errors" class="error">
+        Password is not valid.
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" formControlName="confirmPassword">
+      </div>
+      <div *ngIf="confirmPassword?.touched && confirmPassword?.errors" class="error">
+        Password is not valid..
+      </div>
+      <button type="submit" class="submit-btn" [disabled]="!registerForm.valid"
+        [ngClass]="{'disabled': !registerForm.valid}">Register</button>
+      <div class="spinner"></div>
+      <div class="error">
+        {{errorMessage}}
+      </div>
+    </form>
+  </div>
