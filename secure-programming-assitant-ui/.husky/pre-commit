@@ -1,0 +1,2 @@
+cd ./secure-programming-assitant-ui/
+npm run lint

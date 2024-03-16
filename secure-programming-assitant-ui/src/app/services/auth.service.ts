@@ -3,6 +3,8 @@ import { NewUser, User } from '../../models/types';
 import { BehaviorSubject, Observable, catchError, map } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { HttpClient} from '@angular/common/http';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,7 @@ import { HttpClient} from '@angular/common/http';
 export class AuthService {
 
   private _user = new BehaviorSubject<User|undefined>(undefined)
-  constructor(private httpClient: HttpClient) { 
+  constructor(private httpClient: HttpClient, private oidcSecurityService: OidcSecurityService) { 
   }
 
 
@@ -20,7 +22,7 @@ export class AuthService {
 
   register(user: NewUser): Observable<User|undefined>{
     return this.httpClient.post<User|undefined>(`${environment.apiUrl}/auth/register`, user).pipe(
-      catchError((err) => {
+      catchError(() => {
         return new Observable<User|undefined>((observer) => {
           observer.next(undefined);
         })
@@ -31,10 +33,10 @@ export class AuthService {
       }
     ))
   }
-
+  
   login(user: {username:string, password:string}): Observable<User|undefined>{
     return this.httpClient.post<User|undefined>(`${environment.apiUrl}/auth/login`, user).pipe(
-      catchError((err) => {
+      catchError(() => {
         return new Observable<User|undefined>((observer) => {
           observer.next(undefined);
         })
@@ -48,7 +50,7 @@ export class AuthService {
 
   logout(): Observable<undefined>{
     return this.httpClient.post<undefined>(`${environment.apiUrl}/auth/logout`, {}).pipe(
-      catchError((err) => {
+      catchError(() => {
         return new Observable<undefined>((observer) => {
           observer.next(undefined);
         })
@@ -58,5 +60,8 @@ export class AuthService {
         return undefined;
       }
     ))
+  }
+  test(){
+    return this.httpClient.get(`${environment.apiUrl}/auth/user`);
   }
 }

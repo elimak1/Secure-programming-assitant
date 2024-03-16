@@ -70,7 +70,7 @@ export class AuthenticateComponent {
   onLogin() {
     this.errorMessage = "";
     this.isLoading = true;
-    this.authService.login(this.loginForm.value as any).subscribe((user) => {
+    this.authService.login(this.loginForm.value as {username:string, password:string}).subscribe((user) => {
       this.isLoading = false;
       if (user) {
         this.errorMessage = "";

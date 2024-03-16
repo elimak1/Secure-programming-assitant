@@ -31,4 +31,10 @@ export class SidebarComponent {
       console.log("Logged out");
     });
   }
+
+  test(){
+    this.authService.test().subscribe(() => {
+      console.log("Tested");
+    });
+  }
 }
