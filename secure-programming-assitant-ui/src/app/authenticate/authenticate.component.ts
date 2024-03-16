@@ -24,6 +24,7 @@ export class AuthenticateComponent {
   });
 
   public errorMessage = "";
+  public isLoading= false;
 
   constructor() {
   }
@@ -37,6 +38,7 @@ export class AuthenticateComponent {
       return
     }
     this.errorMessage = "";
+    this.isLoading = true;
     console.log(this.registerForm.value);
   }
 

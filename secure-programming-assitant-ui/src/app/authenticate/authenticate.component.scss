@@ -47,12 +47,15 @@
       margin-top: 0.5rem;
     }
 
+    .form-footer {
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
   .disabled {
     cursor: not-allowed;
     opacity: 0.5;
-  }
-  .submit-btn {
-    margin-top: 15px;
   }
   }
 
@@ -63,6 +66,8 @@
     width: 30px;
     height: 30px;
     animation: spin 1s linear infinite; 
+    bottom: 0px;
+    margin-left: 10px;
   }
   
   @keyframes spin {

@@ -30,11 +30,14 @@
       <div *ngIf="confirmPassword?.touched && confirmPassword?.errors" class="error">
         Password is not valid..
       </div>
-      <button type="submit" class="submit-btn" [disabled]="!registerForm.valid"
+      <div class="form-footer">
+        <button type="submit" class="submit-btn" [disabled]="!registerForm.valid"
         [ngClass]="{'disabled': !registerForm.valid}">Register</button>
-      <div class="spinner"></div>
+      <div class="spinner" *ngIf="isLoading"></div>
       <div class="error">
         {{errorMessage}}
       </div>
+      </div>
+
     </form>
   </div>
