@@ -41,7 +41,15 @@ def register():
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
-                return jsonify({'username': username})
+                user = db.execute(
+                    'SELECT * FROM user WHERE username = ?', (username,)
+                    ).fetchone()
+                if user is None:
+                    error = 'Server error.'
+                else:
+                    session.clear()
+                    session['user_id'] = user['id']
+                    return jsonify({'username': username})
         return Response(error, status=400)
 
     logging.error(error)
@@ -83,7 +91,7 @@ def load_logged_in_user():
             'SELECT * FROM user WHERE id = ?', (user_id,)
         ).fetchone()
 
-@bp.route('/logout')
+@bp.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     return Response(status=200)

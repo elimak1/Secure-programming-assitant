@@ -25,4 +25,10 @@ export class SidebarComponent {
   login(){
     this.router.navigate(['/authenticate']);
   }
+
+  logout(){
+    this.authService.logout().subscribe(() => {
+      console.log("Logged out");
+    });
+  }
 }

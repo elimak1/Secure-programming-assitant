@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   logout(): Observable<undefined>{
-    return this.httpClient.post(`${environment.apiUrl}/auth/logout`, {}).pipe(
+    return this.httpClient.post<undefined>(`${environment.apiUrl}/auth/logout`, {}).pipe(
       catchError((err) => {
         return new Observable<undefined>((observer) => {
           observer.next(undefined);

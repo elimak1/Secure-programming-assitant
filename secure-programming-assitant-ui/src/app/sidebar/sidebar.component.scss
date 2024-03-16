@@ -52,7 +52,7 @@
     bottom: 0;
     left: 0;
     width: 250px;
-    height: 50px;
+    height: 100px;
     background-color: $color-medium-neutral;
     color: $color-secondary;
     font-family: $font-secondary;
@@ -70,4 +70,8 @@
 
 .login {
   min-width: 120px;
+}
+
+.logout {
+  margin-top: 15px;
 }

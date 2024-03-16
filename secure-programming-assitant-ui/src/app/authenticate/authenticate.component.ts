@@ -3,11 +3,12 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { NewUser } from '../../models/types';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-authenticate',
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './authenticate.component.html',
   styleUrl: './authenticate.component.scss'
 })
@@ -36,7 +37,7 @@ export class AuthenticateComponent {
   public errorMessage = "";
   public isLoading= false;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   ngOnInit(){
@@ -53,6 +54,7 @@ export class AuthenticateComponent {
       this.isLoading = false;
       if (user) {
         this.errorMessage = "";
+        this.redirectToHome();
       } else {
         this.errorMessage = "Username or email already exists";
       }
@@ -72,6 +74,7 @@ export class AuthenticateComponent {
       this.isLoading = false;
       if (user) {
         this.errorMessage = "";
+        this.redirectToHome();
       } else {
         this.errorMessage = "Invalid username or password";
       }
@@ -81,6 +84,10 @@ export class AuthenticateComponent {
   toggleForm() {
     this.isRegister = !this.isRegister;
     this.errorMessage = "";
+  }
+
+  private redirectToHome() {
+    this.router.navigate(['/']);
   }
 
   get username() {
