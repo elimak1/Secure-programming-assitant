@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NewUser } from '../../models/types';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-authenticate',
@@ -11,6 +12,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './authenticate.component.scss'
 })
 export class AuthenticateComponent {
+
+  @Input() public isRegister = false;
 
   public registerForm = new FormGroup({
     username: new FormControl('',
@@ -23,10 +26,17 @@ export class AuthenticateComponent {
       [Validators.required, Validators.minLength(8)])
   });
 
+  public loginForm = new FormGroup({
+    username: new FormControl('',
+      [Validators.required, Validators.minLength(3)]),
+    password: new FormControl('',
+      [Validators.required, Validators.minLength(8)]),
+  });
+
   public errorMessage = "";
   public isLoading= false;
 
-  constructor() {
+  constructor(private authService: AuthService) {
   }
 
   ngOnInit(){
@@ -39,7 +49,14 @@ export class AuthenticateComponent {
     }
     this.errorMessage = "";
     this.isLoading = true;
-    console.log(this.registerForm.value);
+    this.authService.register(this.registerForm.value as NewUser).subscribe((user) => {
+      this.isLoading = false;
+      if (user) {
+        this.errorMessage = "";
+      } else {
+        this.errorMessage = "Username or email already exists";
+      }
+    })
   }
 
   validateConfirmPassword(): boolean {
@@ -48,8 +65,26 @@ export class AuthenticateComponent {
     return !!password && password === confirmPassword;
   }
 
+  onLogin() {
+    this.errorMessage = "";
+    this.isLoading = true;
+    this.authService.login(this.loginForm.value as any).subscribe((user) => {
+      this.isLoading = false;
+      if (user) {
+        this.errorMessage = "";
+      } else {
+        this.errorMessage = "Invalid username or password";
+      }
+    })
+  }
+
+  toggleForm() {
+    this.isRegister = !this.isRegister;
+    this.errorMessage = "";
+  }
+
   get username() {
-    return this.registerForm.get('username');
+    return this.isRegister? this.registerForm.get('username') : this.loginForm.get('username');
   }
 
   get email() {
@@ -57,7 +92,7 @@ export class AuthenticateComponent {
   }
 
   get password() {
-    return this.registerForm.get('password');
+    return this.isRegister? this.registerForm.get('password') : this.loginForm.get('password');
   }
 
   get confirmPassword() {

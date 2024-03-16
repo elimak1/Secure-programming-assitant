@@ -2,7 +2,7 @@ import functools
 import logging
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, Response
+    Blueprint, g, redirect,  request, session, url_for, Response, jsonify
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -13,13 +13,23 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/register', methods=("POST", "GET"))
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        email = request.form['email']
+        username = request.json.get('username', None)
+        password = request.json.get('password', None)
+        confirm_password = request.json.get('confirmPassword', None)
+        email = request.json.get('email', None)
+
         db = get_db()
         error = None
 
         # TODO: USERNAME AND PASSWORD VALIDATION 
+        if not username:
+            error = "Username is required."
+        elif not password:
+            error = "Password is required."
+        elif not email:
+            error = "Email is required."
+        elif password != confirm_password:
+            error = "Passwords do not match."
 
         if error is None:
             try:
@@ -31,7 +41,8 @@ def register():
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
-                return redirect(url_for("auth.login"))
+                return jsonify({'username': username})
+        return Response(error, status=400)
 
     logging.error(error)
 
@@ -40,8 +51,8 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.json.get('username', None)
+        password = request.json.get('password', None)
         db = get_db()
         error = None
         user = db.execute(
@@ -56,7 +67,8 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            return jsonify({'username': username})
+        return Response(error, status=400)
     
     return Response(status=400)
 
@@ -74,7 +86,7 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return Response(status=200)
 
 
 def login_required(view):

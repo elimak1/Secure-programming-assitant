@@ -1,5 +1,9 @@
 <div class="registration-form">
-    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+  <div class="form-box" >
+    <div>
+      <a (click)="toggleForm()">{{isRegister? 'Login &#8594;': 'Register &#8594;'}}</a>
+    </div>
+    <form *ngIf="isRegister" [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" id="username" formControlName="username"> 
@@ -38,6 +42,33 @@
         {{errorMessage}}
       </div>
       </div>
-
     </form>
+
+    <form *ngIf="!isRegister" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" formControlName="username"> 
+      </div>
+      <div *ngIf="username?.touched && username?.errors" class="error">
+        Username is not valid.
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password">
+      </div>
+      <div *ngIf="password?.touched && password?.errors" class="error">
+        Password is not valid.
+      </div>
+  
+      <div class="form-footer">
+        <button type="submit" class="submit-btn" [disabled]="!loginForm.valid"
+        [ngClass]="{'disabled': !loginForm.valid || isLoading}">Login</button>
+      <div class="spinner" *ngIf="isLoading"></div>
+      <div class="error">
+        {{errorMessage}}
+      </div>
+      </div>
+    </form>
+  </div>
   </div>
