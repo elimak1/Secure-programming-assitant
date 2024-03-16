@@ -2,7 +2,7 @@ import functools
 import logging
 
 from flask import (
-    Blueprint, g, redirect,  request, session, url_for, Response, jsonify
+    Blueprint, g,  request, session, Response, jsonify
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -96,12 +96,17 @@ def logout():
     session.clear()
     return Response(status=200)
 
+@bp.route('/user', methods=['GET'])
+def user():
+    if g.user is None:
+        return Response(status=401)
+    return jsonify({'username': g.user['username']})
 
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
+            return Response(status=401)
 
         return view(**kwargs)
 
