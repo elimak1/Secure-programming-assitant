@@ -7,10 +7,18 @@ export const environment = {
     domain: 'dev-1s63jkyhuhdslcn0.us.auth0.com',
     clientId: 'OTOHMlIIPMBfdwOIgHEMXBZNM4Sx6oCt',
     authorizationParams: {
-      redirect_uri: window.location.origin
+      redirect_uri: window.location.origin,
+      audience: 'https://dev-1s63jkyhuhdslcn0.us.auth0.com/api/v2/'
     }
   },
   httpInterceptor: {
-    allowedList: [`${apiUri}/*`]
+    allowedList: [
+      {
+        uri: apiUri + '/*',
+        tokenOptions: {
+          authorizationParams: {}
+        }
+      }
+    ]
   }
 }

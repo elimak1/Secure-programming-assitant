@@ -7,9 +7,9 @@
 -- Create some ui components for dashboard Done
 
 --  Implement authentication:
-Login and registrations -> https://auth0.com/
+Login and registrations -> https://auth0.com/ DONE
 
--- !! Session management and more secure authentication
+-- !! Session management and more secure authentication DONE
 
 --   LLM integration
 

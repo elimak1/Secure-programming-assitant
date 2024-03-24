@@ -26,7 +26,6 @@ export class SidebarComponent {
   }
 
   login() {
-    console.log(environment.auth)
     this.authService.loginWithRedirect()
   }
 
