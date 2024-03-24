@@ -8,7 +8,6 @@ import {
 } from '@angular/forms'
 import { NewUser } from '../../models/types'
 import { CommonModule } from '@angular/common'
-import { AuthService } from '../services/auth.service'
 import { Router, RouterModule } from '@angular/router'
 
 @Component({
@@ -51,10 +50,7 @@ export class AuthenticateComponent {
   public errorMessage = ''
   public isLoading = false
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private router: Router) {}
 
   ngOnInit() {}
 
@@ -65,6 +61,7 @@ export class AuthenticateComponent {
     }
     this.errorMessage = ''
     this.isLoading = true
+    /*Ä
     this.authService
       .register(this.registerForm.value as NewUser)
       .subscribe((user) => {
@@ -75,7 +72,7 @@ export class AuthenticateComponent {
         } else {
           this.errorMessage = 'Username or email already exists'
         }
-      })
+      })*/
   }
 
   validateConfirmPassword(): boolean {
@@ -87,6 +84,7 @@ export class AuthenticateComponent {
   onLogin() {
     this.errorMessage = ''
     this.isLoading = true
+    /*
     this.authService
       .login(this.loginForm.value as { username: string; password: string })
       .subscribe((user) => {
@@ -97,7 +95,7 @@ export class AuthenticateComponent {
         } else {
           this.errorMessage = 'Invalid username or password'
         }
-      })
+      })*/
   }
 
   toggleForm() {

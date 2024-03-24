@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-
+import { Component, OnInit } from '@angular/core'
+import { RouterOutlet } from '@angular/router'
+import { SidebarComponent } from './sidebar/sidebar.component'
+import { AuthService } from '@auth0/auth0-angular'
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -10,15 +9,8 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit{
-  title = 'secure-programming-assitant-ui';
+export class AppComponent {
+  title = 'secure-programming-assitant-ui'
 
-  constructor(public oidcSecurityService: OidcSecurityService) {}
-
-  ngOnInit() {
-    this.oidcSecurityService
-      .checkAuth()
-      .subscribe((loginResponse) => {
-        console.log(loginResponse)})
-  }
+  constructor(public auth: AuthService) {}
 }

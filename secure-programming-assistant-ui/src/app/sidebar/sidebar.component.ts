@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { AuthService } from '@auth0/auth0-angular'
+import { Router } from '@angular/router'
+import { HttpService } from '../http.service'
+import { environment } from '../../environment/environment'
 
 @Component({
   selector: 'app-sidebar',
@@ -11,30 +13,30 @@ import { Router } from '@angular/router';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+  public username: string | undefined
+  constructor(
+    private authService: AuthService,
+    private httpService: HttpService
+  ) {}
 
-  public username: string | undefined;
-  constructor(private authService: AuthService, private router: Router) {
+  ngOnInit() {
+    this.authService.user$.subscribe((user) => {
+      if (user) this.username = user['name']
+    })
   }
 
-  ngOnInit(){
-    this.authService.getLoggedInUser().subscribe(user => {
-      this.username = user?.username;
-    });
+  login() {
+    console.log(environment.auth)
+    this.authService.loginWithRedirect()
   }
 
-  login(){
-    this.router.navigate(['/authenticate']);
+  logout() {
+    this.authService.logout()
   }
 
-  logout(){
-    this.authService.logout().subscribe(() => {
-      console.log("Logged out");
-    });
-  }
-
-  test(){
-    this.authService.test().subscribe(() => {
-      console.log("Tested");
-    });
+  test() {
+    this.httpService.test().subscribe((res) => {
+      console.log(res)
+    })
   }
 }

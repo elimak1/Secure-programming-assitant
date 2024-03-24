@@ -2,12 +2,14 @@
 
 -- Set up Angular project Done
 
--- Integrate components
+-- Integrate components Done
 
--- Create some ui components for dashboard
+-- Create some ui components for dashboard Done
 
 --  Implement authentication:
-Login and registrations
+Login and registrations -> https://auth0.com/
+
+-- !! Session management and more secure authentication
 
 --   LLM integration
 
