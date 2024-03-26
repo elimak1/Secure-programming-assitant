@@ -1,5 +1,8 @@
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import AIMessage
+from langchain_core.output_parsers import StrOutputParser
+
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -40,6 +43,8 @@ promptTemplate = ChatPromptTemplate.from_messages([
     ("user", "{input}")
 ])
 
+output_parser = StrOutputParser()
+
 def invokeLLM(prompt: str) -> str:
-    chain = promptTemplate | llm
+    chain = promptTemplate | llm | output_parser
     return chain.invoke({"input": prompt})

@@ -1,7 +1,34 @@
-<h1>Welcome to Secure Programming Assistant</h1>
-<p>
-  Your one-stop shop for secure programming. This application is designed to help you write secure code by providing you with the information you need to make informed decisions about the security of your code.
-</p>
-<p>
-  The language model consults the OWASP Top 10 and CWE/SANS Top 25 lists to provide you with the most up-to-date information on common security vulnerabilities and how to avoid them.
-</p>
+<div *ngIf="!isLoggedIn">
+  <h1>Welcome to Secure Programming Assistant</h1>
+  <p>
+    Your one-stop shop for secure programming. This application is designed to
+    help you write secure code by providing you with the information you need to
+    make informed decisions about the security of your code.
+  </p>
+  <p>
+    The language model consults the OWASP Top 10 and CWE/SANS Top 25 lists to
+    provide you with the most up-to-date information on common security
+    vulnerabilities and how to avoid them.
+  </p>
+</div>
+
+<div *ngIf="isLoggedIn">
+  <h1>Welcome back</h1>
+
+  <div class="chat-box">
+    <ng-container *ngFor="let message of currentChatMessages">
+      <div class="message">
+        <span class="sender">{{ message.sender }}:</span>
+        <span class="content">{{ message.message }}</span>
+      </div>
+    </ng-container>
+    <input
+      type="text"
+      #ctrl="ngModel"
+      placeholder="Type your message here"
+      [(ngModel)]="currentMessage"
+      (keyup.enter)="sendMessage()"
+    />
+    <button (click)="sendMessage()">Send</button>
+  </div>
+</div>

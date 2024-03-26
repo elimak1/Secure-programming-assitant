@@ -13,6 +13,8 @@ Login and registrations -> https://auth0.com/ DONE
 
 --  LLM integration
 
+-- Make sure loaded chatId and userId match
+
 --  Feature for searching OWASP or other relevant sutff
 
 --  Implement sanitization and validation 
@@ -38,6 +40,8 @@ Login and registrations -> https://auth0.com/ DONE
 
 
 __________ Additional features
+
+-- Generate titles for chats
 
 --  Chat sharing
  - Setting chats to public

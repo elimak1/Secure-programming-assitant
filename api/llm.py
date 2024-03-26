@@ -25,10 +25,10 @@ def chats():
     db = get_db()
     
     chatHistory = db.execute(
-        'SELECT * FROM chat WHERE userId = ?',
+        'SELECT * FROM chat_history WHERE user_id = ?',
         (userId,)
     ).fetchall()
-
+    chatHistory = [dict(row) for row in chatHistory]
     return jsonify(chatHistory)
 
 @bp.route('/chat', methods=['GET', 'POST', 'DELETE'])
@@ -41,12 +41,12 @@ def chat():
     db = get_db()
     if chatId is not None:
         chatHistories = db.execute(
-            'SELECT * FROM chat WHERE userId = ? AND chatId = ?',
+            'SELECT * FROM chat_history WHERE user_id = ? AND chatId = ?',
             (userId, chatId)
         ).fetchall()
         if len(chatHistories) == 0:
             return Response(status=404)
-        chatHistory = chatHistory[0]
+        chatHistory = dict(chatHistory[0])
     else:
         chatHistory = ""
     if request.method == 'GET':
@@ -58,30 +58,36 @@ def chat():
         logging.info(f"Response: {response}")
         if response is None:
             return Response(status=500)
-        responseMessage = response['content']
-        chatHistory += f"\nUser: {prompt}\nKev: {responseMessage}"
+        chatHistory += f"\nUser: {prompt}\nKev: {response}"
         saveChat(chatHistory, userId, chatId)
-        return jsonify(response)
+        return jsonify({
+            "chatId": chatId,
+            "response": response,
+            "prompt": prompt,
+        })
     elif request.method == 'DELETE':
         if chatId is None:
             return Response(status=404)
         db.execute(
-            'DELETE FROM chat WHERE chatId = ?',
+            'DELETE FROM chat_history WHERE chatId = ?',
             (chatId,)
         )
+        db.commit()
         return Response(status=200)
     return Response(status=405)
 
 
 def saveChat(text: str, userId: str, chatId: str | None ) -> None:
+    print(text, userId, chatId)
     db = get_db()
     if chatId is None:
         db.execute(
-            'INSERT INTO chat (userId, text) VALUES (?, ?)',
+            'INSERT INTO chat_history (user_id, text) VALUES (?, ?)',
             (userId, text)
         )
     else:
         db.execute(
-            'UPDATE chat SET text = ? WHERE chatId = ?',
-            (text, chatId)
+            'UPDATE chat_history SET text = ? WHERE chatId = ? AND user_id = ?',
+            (text, chatId, userId)
         )
+    db.commit()

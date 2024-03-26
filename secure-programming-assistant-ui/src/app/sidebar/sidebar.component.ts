@@ -1,9 +1,8 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { AuthService } from '@auth0/auth0-angular'
+import { HttpService } from '../services/http.service'
 import { Router } from '@angular/router'
-import { HttpService } from '../http.service'
-import { environment } from '../../environment/environment'
 
 @Component({
   selector: 'app-sidebar',
@@ -16,7 +15,8 @@ export class SidebarComponent {
   public username: string | undefined
   constructor(
     private authService: AuthService,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -37,5 +37,9 @@ export class SidebarComponent {
     this.httpService.test().subscribe((res) => {
       console.log(res)
     })
+  }
+
+  navigate(route: string) {
+    this.router.navigate([route])
   }
 }

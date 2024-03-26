@@ -1,23 +1,21 @@
 <div class="sidebar">
-    <div class="logo">
-        <a href="#">Secure Programming Assistant</a>
+  <div class="logo">
+    <a href="#">Secure Programming Assistant</a>
+  </div>
+  <nav class="navigation">
+    <ul>
+      <li><a (click)="navigate('')">Dashboard</a></li>
+      <li *ngIf="username"><a (click)="navigate('chats')">Chats</a></li>
+      <li><a (click)="test()">Test</a></li>
+    </ul>
+  </nav>
+  <div class="footer">
+    <div class="footer-content">
+      <ng-container *ngIf="username">
+        <div>Logged in as {{ username }}</div>
+        <button class="logout" (click)="logout()">Logout</button>
+      </ng-container>
+      <button *ngIf="!username" class="login" (click)="login()">Login</button>
     </div>
-    <nav class="navigation">
-        <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Messages</a></li>
-            <li><a (click)="test()">Test</a></li>
-        </ul>
-    </nav>
-    <div class="footer">
-        <div class="footer-content">
-            <ng-container *ngIf="username">
-                <div>Logged in as {{username}}</div>
-                <button class="logout" (click)="logout()">Logout</button>
-            </ng-container>
-            <button *ngIf="!username" class="login" (click)="login()">Login</button>
-        </div>
-
-    </div>  
+  </div>
 </div>

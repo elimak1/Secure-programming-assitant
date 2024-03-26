@@ -1,0 +1,18 @@
+<div *ngIf="isLoading; else chatsTable">
+  <app-spinner></app-spinner>
+</div>
+
+<ng-template #chatsTable>
+  <mat-table [dataSource]="oldChats">
+    <ng-container matColumnDef="text">
+      <th mat-header-cell *matHeaderCellDef>Text</th>
+      <td mat-cell *matCellDef="let chat">{{ chat.text }}</td>
+    </ng-container>
+    <ng-container matColumnDef="created">
+      <th mat-header-cell *matHeaderCellDef>Created at</th>
+      <td mat-cell *matCellDef="let chat">{{ chat.created_at }}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['text', 'created']"></tr>
+    <tr mat-row *matRowDef="let myRowData; columns: ['text', 'created']"></tr>
+  </mat-table>
+</ng-template>
