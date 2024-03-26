@@ -38,5 +38,7 @@ def create_app(test_config=None) -> Flask:
 
     from api import auth
     app.register_blueprint(auth.bp)
+    from api import llm
+    app.register_blueprint(llm.bp)
 
     return app

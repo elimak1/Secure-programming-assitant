@@ -11,7 +11,7 @@ Login and registrations -> https://auth0.com/ DONE
 
 -- !! Session management and more secure authentication DONE
 
---   LLM integration
+--  LLM integration
 
 --  Feature for searching OWASP or other relevant sutff
 
