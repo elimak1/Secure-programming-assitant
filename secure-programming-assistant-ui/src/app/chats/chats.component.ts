@@ -35,4 +35,10 @@ export class ChatsComponent {
       }
     })
   }
+
+  deleteChat(chatId: string) {
+    this.httpService.deleteChat(chatId).subscribe(() => {
+      this.oldChats = this.oldChats.filter((chat) => chat.chatId !== chatId)
+    })
+  }
 }

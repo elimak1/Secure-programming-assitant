@@ -34,13 +34,13 @@ def chats():
     chatHistoryFirstMessages = [cleanChatHistory(dict(row)) for row in chatHistoryFirstMessages]
     return jsonify(chatHistoryFirstMessages)
 
-@bp.route('/chat', methods=['GET', 'POST', 'DELETE'])
+@bp.route('/chat/<chat_id>', methods=['GET', 'POST', 'DELETE'])
 @require_auth(None)
-def chat():
+def chat(chat_id):
     token = require_auth.acquire_token()
     userId =  token.get('sub')
 
-    chatId = request.json.get('chatId')
+    chatId =chat_id
     db = get_db()
     if chatId is not None:
         chatMessages = db.execute(
@@ -67,6 +67,7 @@ def chat():
         res = saveChat(chatHistory, userId, chatId, prompt, response)
         return jsonify(res)
     elif request.method == 'DELETE':
+        print(chatId)
         if chatId is None:
             return Response(status=404)
         db.execute(
@@ -109,4 +110,6 @@ def cleanChatHistory(chatHistory: dict) -> dict:
     del chatHistory['user_id']
     del chatHistory['id']
     del chatHistory['message_order']
+    chatHistory['chatId'] = chatHistory['conversation_id']
+    del chatHistory['conversation_id']
     return chatHistory
