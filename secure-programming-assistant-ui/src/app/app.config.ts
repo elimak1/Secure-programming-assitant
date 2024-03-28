@@ -7,6 +7,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http'
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular'
 import { environment } from '../environment/environment';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
+import { provideMarkdown } from 'ngx-markdown';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,8 @@ export const appConfig: ApplicationConfig = {
       httpInterceptor: {
         ...environment.httpInterceptor
       }
-    }), provideAnimationsAsync()
+    }), provideAnimationsAsync(),
+    provideMarkdown()
+    
   ]
 }

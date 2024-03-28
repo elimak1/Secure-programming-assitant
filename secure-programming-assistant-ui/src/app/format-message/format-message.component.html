@@ -1,5 +1,6 @@
 <div>
-<p *ngIf="showEntity">{{message?.from_entity?? ''}}:</p>
-<p>{{message?.text ?? ''}}</p>
+<p *ngIf="showEntity"> <b> {{message?.from_entity?? ''}}</b>:</p>
+<markdown>{{message?.text ?? ''}}
+</markdown>
 </div>
 
