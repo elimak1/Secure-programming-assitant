@@ -6,11 +6,12 @@ import { SpinnerComponent } from '../spinner/spinner.component'
 import { MatTableModule } from '@angular/material/table'
 import { CommonModule } from '@angular/common'
 import moment from 'moment'
+import { FormatMessageComponent } from '../format-message/format-message.component'
 
 @Component({
   selector: 'app-chats',
   standalone: true,
-  imports: [SpinnerComponent, MatTableModule, CommonModule],
+  imports: [SpinnerComponent, MatTableModule, CommonModule, FormatMessageComponent],
   templateUrl: './chats.component.html',
   styleUrl: './chats.component.scss'
 })

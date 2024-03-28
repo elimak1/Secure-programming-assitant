@@ -6,7 +6,7 @@
   <mat-table [dataSource]="oldChats">
     <ng-container matColumnDef="text">
       <th mat-header-cell *matHeaderCellDef>Text</th>
-      <td mat-cell *matCellDef="let chat">{{ chat.text }}</td>
+      <td mat-cell *matCellDef="let chat"><app-format-message [message]="chat" [showEntity]="false"></app-format-message></td>
     </ng-container>
     <ng-container matColumnDef="created">
       <th mat-header-cell *matHeaderCellDef>Created</th>

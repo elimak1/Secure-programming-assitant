@@ -6,11 +6,12 @@ import { Message} from '../../models/types'
 import { FormsModule } from '@angular/forms'
 import moment from 'moment'
 import { SpinnerComponent } from '../spinner/spinner.component'
+import { FormatMessageComponent } from '../format-message/format-message.component'
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, SpinnerComponent],
+  imports: [CommonModule, FormsModule, SpinnerComponent, FormatMessageComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

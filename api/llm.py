@@ -27,7 +27,8 @@ def chats():
     
     chatHistoryFirstMessages = db.execute(
         """SELECT * FROM chat_history WHERE user_id = ?
-        AND message_order=0""",
+        AND message_order=0
+        ORDER BY created_at DESC""",
         (userId,)
     ).fetchall()
     chatHistoryFirstMessages = [cleanChatHistory(dict(row)) for row in chatHistoryFirstMessages]
