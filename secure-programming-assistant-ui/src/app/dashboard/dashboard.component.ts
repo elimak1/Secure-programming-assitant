@@ -2,23 +2,26 @@ import { Component } from '@angular/core'
 import { AuthService } from '@auth0/auth0-angular'
 import { HttpService } from '../services/http.service'
 import { CommonModule } from '@angular/common'
-import { Chat, parsedChatMessage } from '../../models/types'
+import { Message} from '../../models/types'
 import { FormsModule } from '@angular/forms'
+import moment from 'moment'
+import { SpinnerComponent } from '../spinner/spinner.component'
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SpinnerComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
   public isLoggedIn: boolean = false
 
-  public currentChatMessages: parsedChatMessage[] = []
+  public currentChatMessages: Message[] = []
   private currentChatId: string | undefined = undefined
-  public oldChats: Chat[] = []
   public currentMessage: string = ''
+
+  public isLoading = false
 
   constructor(
     private authService: AuthService,
@@ -31,29 +34,25 @@ export class DashboardComponent {
         this.isLoggedIn = true
       }
     })
-    this.httpService.getChats().subscribe((chats) => {
-      this.oldChats = chats
-    })
   }
 
   sendMessage() {
     this.currentChatMessages.push({
-      sender: 'User',
-      message: this.currentMessage
+      from_entity: 'User',
+      text: this.currentMessage,
+      created_at: moment(),
+      chatId: this.currentChatId ?? '',
     })
+
+    this.isLoading = true
+    const prompt = this.currentMessage
+    this.currentMessage = ''
     this.httpService
-      .postPrompt(this.currentMessage, this.currentChatId)
+      .postPrompt(prompt, this.currentChatId)
       .subscribe((res) => {
-        this.currentMessage = ''
-        this.currentChatMessages.push({
-          sender: 'Kev',
-          message: res.response
-        })
+        this.isLoading = false
+        this.currentChatMessages.push(res)
         this.currentChatId = res.chatId
       })
-  }
-
-  parseChatMessages(chatMessages: string[]): parsedChatMessage[] {
-    return []
   }
 }

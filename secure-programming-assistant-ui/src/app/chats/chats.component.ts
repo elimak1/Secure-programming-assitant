@@ -1,10 +1,11 @@
 import { Component } from '@angular/core'
 import { AuthService } from '@auth0/auth0-angular'
 import { HttpService } from '../services/http.service'
-import { Chat } from '../../models/types'
+import { Message } from '../../models/types'
 import { SpinnerComponent } from '../spinner/spinner.component'
 import { MatTableModule } from '@angular/material/table'
 import { CommonModule } from '@angular/common'
+import moment from 'moment'
 
 @Component({
   selector: 'app-chats',
@@ -15,13 +16,8 @@ import { CommonModule } from '@angular/common'
 })
 export class ChatsComponent {
   public isLoading: boolean = true
-  public oldChats: Chat[] = [
-    {
-      text: 'Hello',
-      created_at: new Date(),
-      id: '1'
-    }
-  ]
+  public oldChats: Message[] = []
+  public moment = moment
 
   constructor(
     private authService: AuthService,

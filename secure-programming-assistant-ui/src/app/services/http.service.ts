@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environment/environment'
 import { Observable, map } from 'rxjs'
-import { Chat, PromptResponse } from '../../models/types'
+import { Message } from '../../models/types'
+import moment from 'moment'
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,11 @@ export class HttpService {
     return this.httpClient.get<string>(`${environment.apiUri}/auth/user`)
   }
 
-  getChats(): Observable<Chat[]> {
-    return this.httpClient.get<Chat[]>(`${environment.apiUri}/chats`).pipe(
-      map((chats: Chat[]) => {
-        return chats.map((chat: Chat) => {
-          chat.created_at = new Date(chat.created_at)
+  getChats(): Observable<Message[]> {
+    return this.httpClient.get<Message[]>(`${environment.apiUri}/chats`).pipe(
+      map((chats: Message[]) => {
+        return chats.map((chat: Message) => {
+          chat.created_at = moment(chat.created_at)
           return chat
         })
       })
@@ -28,20 +29,22 @@ export class HttpService {
   postPrompt(
     prompt: string,
     chatId: string | undefined
-  ): Observable<PromptResponse> {
-    return this.httpClient.post<PromptResponse>(`${environment.apiUri}/chat`, {
+  ): Observable<Message> {
+    return this.httpClient.post<Message>(`${environment.apiUri}/chat`, {
       prompt,
       ...(chatId ? { chatId } : {})
     })
   }
 
-  getChat(chatId: string): Observable<Chat> {
+  getChat(chatId: string): Observable<Message[]> {
     return this.httpClient
-      .get<Chat>(`${environment.apiUri}/chat/${chatId}`)
+      .get<Message[]>(`${environment.apiUri}/chat/${chatId}`)
       .pipe(
-        map((chat: Chat) => {
-          chat.created_at = new Date(chat.created_at)
-          return chat
+        map((chats: Message[]) => {
+          return chats.map((chat: Message) => {
+            chat.created_at = moment(chat.created_at)
+            return chat
+          })
         })
       )
   }

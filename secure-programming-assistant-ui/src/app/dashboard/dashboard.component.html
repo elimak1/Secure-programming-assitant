@@ -18,8 +18,8 @@
   <div class="chat-box">
     <ng-container *ngFor="let message of currentChatMessages">
       <div class="message">
-        <span class="sender">{{ message.sender }}:</span>
-        <span class="content">{{ message.message }}</span>
+        <span class="sender">{{ message.from_entity }}:</span>
+        <span class="content">{{ message.text }}</span>
       </div>
     </ng-container>
     <input
@@ -29,6 +29,9 @@
       [(ngModel)]="currentMessage"
       (keyup.enter)="sendMessage()"
     />
-    <button (click)="sendMessage()">Send</button>
+    <button (click)="sendMessage()" [disabled]="isLoading">Send</button>
+    <ng-container *ngIf="isLoading">
+      <app-spinner></app-spinner>
+    </ng-container>
   </div>
 </div>

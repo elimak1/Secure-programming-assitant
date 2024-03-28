@@ -1,7 +1,6 @@
 from flask import (
     Blueprint, g,  request, session, Response, jsonify
 )
-from api.db.db_utils import get_db
 from api.authenticate import getResourceProtector
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')

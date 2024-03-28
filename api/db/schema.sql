@@ -1,17 +1,11 @@
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS post;
-
-CREATE TABLE user (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  email TEXT NOT NULL
-);
+DROP TABLE IF EXISTS chat_history;
 
 CREATE TABLE chat_history (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL,
+  conversation_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  from_entity TEXT NOT NULL,
   text TEXT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES user(id)
+  message_order INTEGER NOT NULL,
 );

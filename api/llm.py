@@ -5,6 +5,7 @@ from api.db.db_utils import get_db
 from api.authenticate import getResourceProtector
 from api.langchain_utils.openai import invokeLLM
 import logging
+from uuid import uuid4
 
 bp = Blueprint('llm', __name__)
 
@@ -24,12 +25,13 @@ def chats():
 
     db = get_db()
     
-    chatHistory = db.execute(
-        'SELECT * FROM chat_history WHERE user_id = ?',
+    chatHistoryFirstMessages = db.execute(
+        """SELECT * FROM chat_history WHERE user_id = ?
+        AND message_order=0""",
         (userId,)
     ).fetchall()
-    chatHistory = [dict(row) for row in chatHistory]
-    return jsonify(chatHistory)
+    chatHistoryFirstMessages = [cleanChatHistory(dict(row)) for row in chatHistoryFirstMessages]
+    return jsonify(chatHistoryFirstMessages)
 
 @bp.route('/chat', methods=['GET', 'POST', 'DELETE'])
 @require_auth(None)
@@ -40,36 +42,34 @@ def chat():
     chatId = request.json.get('chatId')
     db = get_db()
     if chatId is not None:
-        chatHistories = db.execute(
-            'SELECT * FROM chat_history WHERE user_id = ? AND chatId = ?',
+        chatMessages = db.execute(
+            """SELECT * FROM chat_history WHERE user_id = ? AND conversation_id = ?
+            ORDER BY message_order ASC""",
             (userId, chatId)
         ).fetchall()
-        if len(chatHistories) == 0:
+        if len(chatMessages) == 0:
             return Response(status=404)
-        chatHistory = dict(chatHistory[0])
+        chatHistory = [dict(row) for row in chatMessages]
     else:
-        chatHistory = ""
+        chatHistory = None
     if request.method == 'GET':
-        return jsonify(chatHistory)
+        return jsonify([cleanChatHistory(row) for row in chatHistory])
     elif request.method == 'POST':
         prompt = request.json.get('prompt')
+        # TODO: use history
         response = invokeLLM(prompt)
         logging.info(f"User {userId} sent prompt: {prompt}")
         logging.info(f"Response: {response}")
         if response is None:
             return Response(status=500)
-        chatHistory += f"\nUser: {prompt}\nKev: {response}"
-        saveChat(chatHistory, userId, chatId)
-        return jsonify({
-            "chatId": chatId,
-            "response": response,
-            "prompt": prompt,
-        })
+        
+        res = saveChat(chatHistory, userId, chatId, prompt, response)
+        return jsonify(res)
     elif request.method == 'DELETE':
         if chatId is None:
             return Response(status=404)
         db.execute(
-            'DELETE FROM chat_history WHERE chatId = ?',
+            'DELETE FROM chat_history WHERE conversation_id = ?',
             (chatId,)
         )
         db.commit()
@@ -77,17 +77,35 @@ def chat():
     return Response(status=405)
 
 
-def saveChat(text: str, userId: str, chatId: str | None ) -> None:
-    print(text, userId, chatId)
-    db = get_db()
+def saveChat(chatHistory: dict or None, userId: str, chatId: str or None, prompt: str, response:str ) -> dict:
+    # Save prompt
+
     if chatId is None:
-        db.execute(
-            'INSERT INTO chat_history (user_id, text) VALUES (?, ?)',
-            (userId, text)
-        )
+        chatId = str(uuid4())
+    if chatHistory is None or len(chatHistory) == 0:
+        message_order = 0
     else:
-        db.execute(
-            'UPDATE chat_history SET text = ? WHERE chatId = ? AND user_id = ?',
-            (text, chatId, userId)
-        )
+        message_order = chatHistory[-1]['message_order'] + 1
+
+
+    db = get_db()
+    db.execute("""
+        INSERT INTO chat_history (user_id, conversation_id, message_order, from_entity, text)
+        VALUES (?, ?, ?, ?, ?)
+               """,
+               (userId, chatId, message_order, 'User', prompt))
+    message_order += 1
+    db.execute("""
+        INSERT INTO chat_history (user_id, conversation_id, message_order, from_entity, text)
+        VALUES (?, ?, ?, ?, ?)
+               """,
+               (userId, chatId, message_order, 'Kev', response))
     db.commit()
+    return {'chatId': chatId, 'text': response, 'from_entity': 'Kev'}
+
+
+def cleanChatHistory(chatHistory: dict) -> dict:
+    del chatHistory['user_id']
+    del chatHistory['id']
+    del chatHistory['message_order']
+    return chatHistory
