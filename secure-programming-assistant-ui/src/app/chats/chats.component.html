@@ -17,6 +17,6 @@
       <td mat-cell *matCellDef="let chat"><button (click)="deleteChat(chat.chatId)">Delete</button></td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="['text', 'created', 'delete']"></tr>
-    <tr mat-row *matRowDef="let myRowData; columns: ['text', 'created', 'delete']"></tr>
+    <tr mat-row (click)="openChat(row)" *matRowDef="let row; columns: ['text', 'created', 'delete']"></tr>
   </mat-table>
 </ng-template>

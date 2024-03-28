@@ -35,6 +35,7 @@ def chats():
     return jsonify(chatHistoryFirstMessages)
 
 @bp.route('/chat/<chat_id>', methods=['GET', 'POST', 'DELETE'])
+@bp.route('/chat', methods=['GET', 'POST', 'DELETE'], defaults={'chat_id': None})
 @require_auth(None)
 def chat(chat_id):
     token = require_auth.acquire_token()

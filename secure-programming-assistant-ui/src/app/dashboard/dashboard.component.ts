@@ -32,9 +32,24 @@ export class DashboardComponent {
   ngOnInit() {
     this.authService.user$.subscribe((user) => {
       if (user) {
-        this.isLoggedIn = true
+        this.isLoggedIn = true;
       }
-    })
+    });
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const chatId = queryParams.get('chatId');
+    if (chatId){
+      this.currentChatId = chatId;
+      this.isLoading = true;
+      this.httpService.getChat(chatId).subscribe((chats) => {
+        this.currentChatMessages = chats;
+        // Scroll to bottom of page
+        setTimeout(() => {
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+        this.isLoading = false;
+      });
+    }
   }
 
   sendMessage() {

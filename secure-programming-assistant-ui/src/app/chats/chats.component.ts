@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { AuthService } from '@auth0/auth0-angular'
 import { HttpService } from '../services/http.service'
+import { Router } from '@angular/router'
 import { Message } from '../../models/types'
 import { SpinnerComponent } from '../spinner/spinner.component'
 import { MatTableModule } from '@angular/material/table'
@@ -22,7 +23,8 @@ export class ChatsComponent {
 
   constructor(
     private authService: AuthService,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -40,5 +42,9 @@ export class ChatsComponent {
     this.httpService.deleteChat(chatId).subscribe(() => {
       this.oldChats = this.oldChats.filter((chat) => chat.chatId !== chatId)
     })
+  }
+
+  openChat(message: Message) {
+    this.router.navigate(['/'], { queryParams: { chatId: message.chatId } })
   }
 }

@@ -19,7 +19,7 @@ export class HttpService {
     return this.httpClient.get<Message[]>(`${environment.apiUri}/chats`).pipe(
       map((chats: Message[]) => {
         return chats.map((chat: Message) => {
-          chat.created_at = moment(chat.created_at)
+          chat.created_at = moment.utc(chat.created_at)
           return chat
         })
       })
@@ -30,9 +30,8 @@ export class HttpService {
     prompt: string,
     chatId: string | undefined
   ): Observable<Message> {
-    return this.httpClient.post<Message>(`${environment.apiUri}/chat`, {
+    return this.httpClient.post<Message>(`${environment.apiUri}/chat/${chatId ?? ''}`, {
       prompt,
-      ...(chatId ? { chatId } : {})
     })
   }
 
@@ -42,7 +41,7 @@ export class HttpService {
       .pipe(
         map((chats: Message[]) => {
           return chats.map((chat: Message) => {
-            chat.created_at = moment(chat.created_at)
+            chat.created_at = moment.utc(chat.created_at)
             return chat
           })
         })
