@@ -1,13 +1,13 @@
 @import '../_variables.scss';
 
 .app-container {
-    display: flex;
-    min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
 }
 
 .app-content {
-    margin-left: 250px;
-    padding: 20px; 
-    width: calc(100% - 250px);
-    background-color: $color-dark-neutral;
-  }
+  margin-left: 250px;
+  padding: 20px;
+  width: calc(100% - 250px);
+  background-color: $color-dark-neutral;
+}

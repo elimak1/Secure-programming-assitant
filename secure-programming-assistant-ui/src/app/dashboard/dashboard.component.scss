@@ -1,0 +1,18 @@
+@import '../../_variables.scss';
+
+.dashboard__chat-box {
+  margin-top: 20px;
+  padding: 10px;
+}
+.chat_box {
+  margin-top: 10px;
+  display: flex;
+  justify-content: left;
+}
+
+.dashboard__input {
+  width: 100%;
+  padding: 10px;
+  margin-right: 20px;
+  background-color: $color-accent1;
+}

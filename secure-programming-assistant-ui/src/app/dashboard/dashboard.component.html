@@ -15,20 +15,23 @@
 <div *ngIf="isLoggedIn">
   <h1>Welcome back</h1>
 
-  <div class="chat-box">
+  <div class="dashboard__chat-box">
     <ng-container *ngFor="let message of currentChatMessages">
       <app-format-message [message]="message"></app-format-message>
     </ng-container>
-    <input
-      type="text"
-      #ctrl="ngModel"
-      placeholder="Type your message here"
-      [(ngModel)]="currentMessage"
-      (keyup.enter)="sendMessage()"
-    />
-    <button (click)="sendMessage()" [disabled]="isLoading">Send</button>
     <ng-container *ngIf="isLoading">
-      <app-spinner></app-spinner>
+      <app-spinner class="dashboard__spinner"></app-spinner>
     </ng-container>
+    <div class="chat_box">
+      <input
+        type="text"
+        #ctrl="ngModel"
+        placeholder="Type your message here"
+        [(ngModel)]="currentMessage"
+        (keyup.enter)="sendMessage()"
+        class="dashboard__input"
+      />
+      <button (click)="sendMessage()" [disabled]="isLoading">Send</button>
+    </div>
   </div>
 </div>

@@ -1,19 +1,37 @@
 <div *ngIf="isLoading">
   <app-spinner></app-spinner>
 </div>
-<mat-table [dataSource]="dataSource"  [hidden]="isLoading" matSort>
+<mat-table [dataSource]="dataSource" [hidden]="isLoading" matSort>
   <ng-container matColumnDef="text">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Topic</th>
-    <td mat-cell *matCellDef="let chat"><app-format-message [message]="chat" [showEntity]="false"></app-format-message></td>
+    <td mat-cell *matCellDef="let chat">
+      <app-format-message
+        [message]="chat"
+        [showEntity]="false"
+      ></app-format-message>
+    </td>
   </ng-container>
   <ng-container matColumnDef="created_at">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
-    <td mat-cell *matCellDef="let chat">{{ moment(chat.created_at).fromNow() }}</td>
+    <td mat-cell *matCellDef="let chat">
+      {{ moment(chat.created_at).fromNow() }}
+    </td>
   </ng-container>
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let chat"><button (click)="deleteChat(chat.chatId, $event)">Delete</button></td>
+    <td mat-cell *matCellDef="let chat">
+      <button (click)="deleteChat(chat.chatId, $event)">Delete</button>
+    </td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="['text', 'created_at', 'delete']"></tr>
-  <tr mat-row (click)="openChat(row)" *matRowDef="let row; columns: ['text', 'created_at', 'delete']"></tr>
+  <tr
+    class="header-row"
+    mat-header-row
+    *matHeaderRowDef="['text', 'created_at', 'delete']"
+  ></tr>
+  <tr
+    class="mat-row"
+    mat-row
+    (click)="openChat(row)"
+    *matRowDef="let row; columns: ['text', 'created_at', 'delete']"
+  ></tr>
 </mat-table>
