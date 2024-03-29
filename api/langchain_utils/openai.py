@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-OPENAIKEY = os.getenv('OPENAIKEY')
+OPENAIKEY = os.getenv('OPENAI_API_KEY')
 assert OPENAIKEY, 'OPENAIKEY not set'
 
 llm = ChatOpenAI(openai_api_key=OPENAIKEY)
