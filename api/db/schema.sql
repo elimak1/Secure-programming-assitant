@@ -7,5 +7,5 @@ CREATE TABLE chat_history (
   from_entity TEXT NOT NULL,
   text TEXT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  message_order INTEGER NOT NULL,
+  message_order INTEGER NOT NULL
 );

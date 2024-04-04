@@ -53,13 +53,12 @@ def chat(chat_id):
             return Response(status=404)
         chatHistory = [dict(row) for row in chatMessages]
     else:
-        chatHistory = None
+        chatHistory = []
     if request.method == 'GET':
         return jsonify([cleanChatHistory(row) for row in chatHistory])
     elif request.method == 'POST':
         prompt = request.json.get('prompt')
-        # TODO: use history
-        response = invokeLLM(prompt)
+        response = invokeLLM(prompt, chatHistory)
         logging.info(f"User {userId} sent prompt: {prompt}")
         logging.info(f"Response: {response}")
         if response is None:
@@ -80,12 +79,12 @@ def chat(chat_id):
     return Response(status=405)
 
 
-def saveChat(chatHistory: dict or None, userId: str, chatId: str or None, prompt: str, response:str ) -> dict:
+def saveChat(chatHistory: list, userId: str, chatId: str or None, prompt: str, response:str ) -> dict:
     # Save prompt
 
     if chatId is None:
         chatId = str(uuid4())
-    if chatHistory is None or len(chatHistory) == 0:
+    if len(chatHistory) == 0:
         message_order = 0
     else:
         message_order = chatHistory[-1]['message_order'] + 1

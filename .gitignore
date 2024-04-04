@@ -13,3 +13,8 @@ dist/
 build/
 
 .env
+
+documents/
+
+# vector_store
+owasp_faiss/

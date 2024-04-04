@@ -4,3 +4,5 @@ python-dotenv
 Authlib
 langchain
 langchain-openai
+faiss-cpu
+langchainhub
