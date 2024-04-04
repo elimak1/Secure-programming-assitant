@@ -1,23 +1,31 @@
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.vectorstores import FAISS
-from langchain.agents import create_openai_functions_agent, AgentExecutor
+from langchain.agents import create_openai_tools_agent, AgentExecutor, create_openai_functions_agent
 from langchain_core.messages import HumanMessage, AIMessage
-from langchain.tools.render import render_text_description
+from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
+from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
+from langchain_core.prompt_values import ChatPromptValue
+from langchain_core.utils.function_calling import convert_to_openai_tool
+from langchain_core.runnables import RunnablePassthrough
+from pprint import pprint
+from langchain.prompts import MessagesPlaceholder
+
+
 
 from flask import g
 
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 VECTOR_STORE_PATH = "./vector_store/owasp_faiss"
 OPENAIKEY = os.getenv('OPENAI_API_KEY')
 assert OPENAIKEY, 'OPENAIKEY not set'
 
-def init_openai_agent():
+def init_openai_agent() -> AgentExecutor:
     llm = ChatOpenAI(openai_api_key=OPENAIKEY)
 
     tools = []
@@ -30,10 +38,9 @@ def init_openai_agent():
             retriever,
             "owasp_doc_search",
             """Search for owasp documentation. For any questions about owasp, you must use this tool!
-            Use detailed and descriptive queries to get the best results.""")
+            Use detailed and descriptive queries to get the best results.
+            Do not use the same query more than once.""")
         tools.append(retriever_tool)
-
-    tool_descriptions = render_text_description(tools)
 
     systemPrompt = """
     You are a secure coding expert named "Kev". You can engage in casual conversation but you main purpose is the following:
@@ -52,28 +59,58 @@ def init_openai_agent():
     Practical Recommendations: Offer actionable advice for mitigating risks, including code examples where possible.
     Language and Framework Specificity: Tailor advice to the specific programming language or framework involved.
     Up-to-Date Information: Ensure all recommendations reflect the latest security research and guidelines.
-    Chat history:
-    {chat_history}
-
-    {input}
-
-    {agent_scratchpad}
-
-    {intermediate_steps}
     """
 
-    prompt = ChatPromptTemplate.from_template(
-        template=systemPrompt
+    prompt = ChatPromptTemplate.from_messages(
+        [("system", systemPrompt),
+         MessagesPlaceholder("chat_history"),
+         ("user", "{input}"),
+         MessagesPlaceholder("agent_scratchpad")]
+    )
+    llm_with_tools = llm.bind(tools=[convert_to_openai_tool(tool) for tool in tools])
+
+    agent2 = (
+        RunnablePassthrough.assign(
+            agent_scratchpad=lambda x: format_to_openai_tool_messages(
+                x["intermediate_steps"]
+            )
+        )
+        | prompt
+        | condense_prompt
+        | llm_with_tools
+        | OpenAIToolsAgentOutputParser()
     )
 
-    agent = create_openai_functions_agent(llm, tools, prompt)
-    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-    return agent_executor
+    agent_executor = AgentExecutor(agent=agent2, tools=tools, verbose=True, max_iterations=10)
+    return agent_executor, llm
 
-def get_openai_agent():
+def condense_prompt(prompt: ChatPromptValue) -> ChatPromptValue:
+    messages = prompt.to_messages()
+    llm = get_openai_llm()
+    num_tokens = llm.get_num_tokens_from_messages(messages)
+    ai_function_messages = messages[1:]
+    while num_tokens > 8_000:
+        ai_function_messages = ai_function_messages[1:]
+        num_tokens = llm.get_num_tokens_from_messages(
+            messages[:1] + ai_function_messages
+        )
+    messages = messages[:1] + ai_function_messages
+    return ChatPromptValue(messages=messages)
+
+def get_openai_agent() -> AgentExecutor:
     if 'openai_agent' not in g:
-        g.openai_agent = init_openai_agent()
+        agent, llm = init_openai_agent()
+        g.openai_agent = agent
+        g.llm = llm
     return g.openai_agent
+
+def get_openai_llm() -> ChatOpenAI:
+    if 'llm' not in g:
+        agent, llm = init_openai_agent()
+        g.openai_agent = agent
+        g.llm = llm
+    return g.llm
+
 
 
 def invokeLLM(prompt: str, history: list = []) -> str:
