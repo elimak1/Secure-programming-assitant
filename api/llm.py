@@ -79,7 +79,7 @@ def chat(chat_id):
     return Response(status=405)
 
 
-def saveChat(chatHistory: list, userId: str, chatId: str or None, prompt: str, response:str ) -> dict:
+def saveChat(chatHistory: list, userId: str, chatId: str | None, prompt: str, response:str ) -> dict:
     # Save prompt
 
     if chatId is None:

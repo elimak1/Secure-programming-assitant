@@ -39,7 +39,6 @@ export class ChatsComponent {
   @ViewChild(MatSort, { static: false }) sort?: MatSort
 
   ngAfterViewInit() {
-    console.log(this.sort)
     if (this.sort) {
       this.dataSource.sort = this.sort
     }

@@ -1,4 +1,4 @@
--- set up flask backend
+-- set up flask backend Done
 
 -- Set up Angular project Done
 
@@ -11,11 +11,13 @@ Login and registrations -> https://auth0.com/ DONE
 
 -- !! Session management and more secure authentication DONE
 
---  LLM integration
+--  LLM integration Done
 
--- Make sure loaded chatId and userId match
+-- UI basic error handling
 
---  Feature for searching OWASP or other relevant sutff
+-- Make sure loaded chatId and userId match Done
+
+--  Feature for searching OWASP or other relevant sutff Done
 
 --  Implement sanitization and validation 
 
@@ -25,7 +27,7 @@ Login and registrations -> https://auth0.com/ DONE
 
 --  Admin credentials
 
---  Chat management - load and display old chats
+--  Chat management - load and display old chats Done
 
 -- CREATE COMPREHENSIVE documentation
 

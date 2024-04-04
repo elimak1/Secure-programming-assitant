@@ -1,66 +1,81 @@
 @import '_variables.scss';
+@import 'ngx-toastr/toastr';
 body {
-    margin: 0;
-    padding: 0;
-    background-color: $color-dark-neutral;
+  margin: 0;
+  padding: 0;
+  background-color: $color-dark-neutral;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: $font-primary;
-    font-weight: $font-weight-bold;
-    line-height: $line-height-heading;
-    color: $color-text;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-primary;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-heading;
+  color: $color-text;
 }
 
 h1 {
-    font-size: $font-size-xxl;
+  font-size: $font-size-xxl;
 }
 
 h2 {
-    font-size: $font-size-xl;
+  font-size: $font-size-xl;
 }
 
 h3 {
-    font-size: $font-size-lg;
+  font-size: $font-size-lg;
 }
 
 a {
-    color: $color-primary;
-    text-decoration: none;
+  color: $color-primary;
+  text-decoration: none;
 }
 
 p {
-    font-family: $font-secondary;
-    font-size: $font-size-base;
-    line-height: $line-height-base;
-    color: $color-text;
-
+  font-family: $font-secondary;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $color-text;
 }
 
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 button {
-    padding: 0.75rem 1.5rem; 
-    font-size: 1rem; 
-    font-family: $font-primary;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  
-    background-color: $color-primary;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-family: $font-primary;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+
+  background-color: $color-primary;
+  color: $color-text;
+
+  &:hover,
+  &:focus {
+    background-color: darken($color-primary, 10%);
     color: $color-text;
-  
-    &:hover, &:focus {
-      background-color: darken($color-primary, 10%); 
-      color: $color-text;
-    }
-  
-    &:active {
-      background-color: darken($color-primary, 20%); 
-    }
   }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; color: $color-text }
+
+  &:active {
+    background-color: darken($color-primary, 20%);
+  }
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  color: $color-text;
+}
