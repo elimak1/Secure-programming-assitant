@@ -58,6 +58,13 @@ def chat(chat_id):
         return jsonify([cleanChatHistory(row) for row in chatHistory])
     elif request.method == 'POST':
         prompt = request.json.get('prompt')
+        if prompt is None:
+            return Response(status=400, response="Prompt not provided")
+
+        validatePromptResponse = validatePrompt(prompt)
+        if validatePromptResponse is not None:
+            return validatePromptResponse
+
         response = invokeLLM(prompt, chatHistory)
         logging.info(f"User {userId} sent prompt: {prompt}")
         logging.info(f"Response: {response}")
@@ -113,3 +120,8 @@ def cleanChatHistory(chatHistory: dict) -> dict:
     chatHistory['chatId'] = chatHistory['conversation_id']
     del chatHistory['conversation_id']
     return chatHistory
+
+def validatePrompt(prompt: str) -> Response | None:
+    if len(prompt) > 5000:
+        return Response(status=400, response="Prompt too long")
+    return None
