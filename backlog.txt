@@ -20,8 +20,10 @@ Login and registrations -> https://auth0.com/ DONE
 --  Feature for searching OWASP or other relevant sutff Done
 
 --  Email verification system
+  - Enabled bot detection
+  - Not available in free auth0
 
---  Implement rate limiting
+--  Implement rate limiting Done
 
 --  Admin credentials
 
@@ -39,6 +41,8 @@ Login and registrations -> https://auth0.com/ DONE
 -- Penetration testing
 -- Document
 -- Implement monitoring and logging 
+
+-- owasp llm top 10
 
 
 __________ Additional features

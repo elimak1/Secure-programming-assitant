@@ -33,12 +33,6 @@ export class SidebarComponent {
     this.authService.logout()
   }
 
-  test() {
-    this.httpService.test().subscribe((res) => {
-      console.log(res)
-    })
-  }
-
   navigate(route: string) {
     this.router.navigate([route])
   }

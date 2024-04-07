@@ -2,13 +2,14 @@ import os
 
 from flask import Flask
 from flask_cors import CORS
+from .core import limiter
 
 def create_app(test_config=None) -> Flask:
     
     app = Flask(__name__, instance_relative_config=True)
+    limiter.init_app(app)
 
     CORS(app, resources={r"/*": {"origins": "http://localhost:4200"}})
-
 
     app.config.from_mapping(
         SECRET_KEY='dev',

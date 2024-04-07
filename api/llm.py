@@ -1,16 +1,19 @@
 from flask import (
-    Blueprint, g,  request, session, Response, jsonify
+    Blueprint,  request, Response, jsonify
 )
 from api.db.db_utils import get_db
 from api.authenticate import getResourceProtector
 from api.langchain_utils.openai import invokeLLM
 import logging
 from uuid import uuid4
+from .core import limiter
 
 bp = Blueprint('llm', __name__)
 
 require_auth = getResourceProtector()
 
+
+limiter.limit('4/second')(bp) 
 
 @bp.route('/ping', methods=['GET'])
 @require_auth(None)
@@ -36,6 +39,7 @@ def chats():
 
 @bp.route('/chat/<chat_id>', methods=['GET', 'POST', 'DELETE'])
 @bp.route('/chat/', methods=['GET', 'POST', 'DELETE'], defaults={'chat_id': None})
+@limiter.limit('50 /hour;100/day', methods=['POST'], override_defaults=False, error_message='Rate limit exceeded')
 @require_auth(None)
 def chat(chat_id):
     token = require_auth.acquire_token()
