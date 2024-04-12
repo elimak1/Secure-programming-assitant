@@ -25,7 +25,7 @@ Login and registrations -> https://auth0.com/ DONE
 
 --  Implement rate limiting Done
 
---  Admin credentials
+--  Admin credentials Done
 
 --  Chat management - load and display old chats Done
 

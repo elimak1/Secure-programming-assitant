@@ -81,8 +81,8 @@ def chat(chat_id):
         if chatId is None:
             return Response(status=404)
         db.execute(
-            'DELETE FROM chat_history WHERE conversation_id = ?',
-            (chatId,)
+            'DELETE FROM chat_history WHERE conversation_id = ? AND user_id = ?',
+            (chatId, userId)
         )
         db.commit()
         return Response(status=200)

@@ -30,16 +30,10 @@ def create_app(test_config=None) -> Flask:
         pass
 
     register_error_handler(app)
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello() -> str:
-        return 'Hello, World!'
     
     from api.db import db_utils
     db_utils.init_app(app)
 
-    from api import auth
-    app.register_blueprint(auth.bp)
     from api import llm
     app.register_blueprint(llm.bp)
 
