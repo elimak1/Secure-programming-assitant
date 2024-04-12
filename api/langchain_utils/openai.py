@@ -122,5 +122,5 @@ def invokeLLM(prompt: str, history: list = []) -> str:
             chat_history.append(AIMessage(msg["text"]))
 
     agent_executor = get_openai_agent()
-    output = agent_executor.invoke({"input": prompt, "chat_history": chat_history})
-    return output["output"]
+    agent_response = agent_executor.invoke({"input": prompt, "chat_history": chat_history})
+    return agent_response["output"]

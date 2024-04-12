@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from .core import limiter
 
@@ -29,6 +29,7 @@ def create_app(test_config=None) -> Flask:
     except OSError:
         pass
 
+    register_error_handler(app)
     # a simple page that says hello
     @app.route('/hello')
     def hello() -> str:
@@ -42,4 +43,19 @@ def create_app(test_config=None) -> Flask:
     from api import llm
     app.register_blueprint(llm.bp)
 
+    return app
+
+def register_error_handler(app):
+    def ratelimit_handler(e):
+        return jsonify(error=429, message=str(e.description)), 429
+    
+    def not_found(e):
+        return jsonify(error=404, message=str(e.description)), 404
+    
+    def internal_server_error(e):
+        return jsonify(error=500, message=str(e.description)), 500
+    
+    app.register_error_handler(429, ratelimit_handler)
+    app.register_error_handler(404, not_found)
+    app.register_error_handler(500, internal_server_error)
     return app

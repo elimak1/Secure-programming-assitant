@@ -72,7 +72,7 @@ export class DashboardComponent {
       .postPrompt(prompt, this.currentChatId)
       .pipe(
         catchError((err) => {
-          this.toastr.error('Failed to send message')
+          this.toastr.error(err.message, 'Error')
           return of(undefined)
         })
       )
