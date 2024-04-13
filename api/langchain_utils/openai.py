@@ -2,14 +2,13 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.vectorstores import FAISS
-from langchain.agents import create_openai_tools_agent, AgentExecutor, create_openai_functions_agent
+from langchain.agents import  AgentExecutor
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
 from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
 from langchain_core.prompt_values import ChatPromptValue
 from langchain_core.utils.function_calling import convert_to_openai_tool
 from langchain_core.runnables import RunnablePassthrough
-from pprint import pprint
 from langchain.prompts import MessagesPlaceholder
 
 
@@ -69,7 +68,7 @@ def init_openai_agent() -> AgentExecutor:
     )
     llm_with_tools = llm.bind(tools=[convert_to_openai_tool(tool) for tool in tools])
 
-    agent2 = (
+    agent = (
         RunnablePassthrough.assign(
             agent_scratchpad=lambda x: format_to_openai_tool_messages(
                 x["intermediate_steps"]
@@ -81,7 +80,7 @@ def init_openai_agent() -> AgentExecutor:
         | OpenAIToolsAgentOutputParser()
     )
 
-    agent_executor = AgentExecutor(agent=agent2, tools=tools, verbose=True, max_iterations=10)
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, max_iterations=10)
     return agent_executor, llm
 
 def condense_prompt(prompt: ChatPromptValue) -> ChatPromptValue:
@@ -89,7 +88,7 @@ def condense_prompt(prompt: ChatPromptValue) -> ChatPromptValue:
     llm = get_openai_llm()
     num_tokens = llm.get_num_tokens_from_messages(messages)
     ai_function_messages = messages[1:]
-    while num_tokens > 8_000:
+    while num_tokens > 8000:
         ai_function_messages = ai_function_messages[1:]
         num_tokens = llm.get_num_tokens_from_messages(
             messages[:1] + ai_function_messages

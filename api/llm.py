@@ -12,7 +12,6 @@ bp = Blueprint('llm', __name__)
 
 require_auth = getResourceProtector()
 
-
 limiter.limit('4/second')(bp) 
 
 @bp.route('/ping', methods=['GET'])
@@ -125,6 +124,6 @@ def cleanChatHistory(chatHistory: dict) -> dict:
     return chatHistory
 
 def validatePrompt(prompt: str) -> Response | None:
-    if len(prompt) > 5000:
+    if len(prompt) > 10000:
         return Response(status=400, response="Prompt too long")
     return None
