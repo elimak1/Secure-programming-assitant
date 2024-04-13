@@ -2,10 +2,10 @@
 
 The application is a secure programming assistant that helps users to create secure applications. Logged in users can chat with the assitant which is using GPT-3.5 and using documents scraped from owasp.org as potential retrieved content to give user's up to date information on secure programming practices.
 
-Main features of the program
+Main features of the application
 
 - Retrieval augmented Chatbot
-- Storing, deleting and continuing conversations
+- Continuing or deleting previous conversations
 - Rate limiting for non-admin users
 - User authentication (user management is handled by auth0 service)
 - Slick UI
@@ -45,13 +45,88 @@ Structure of the repository:
 - All login and registration attempts are logged by Auth0.
 - Api is rate limited by ip to 4 requestes per second and chat prompt api is further limited to 50 per hour or 100 per day to non admin users. In Auth0 threat protection is prevent access to bots and other malicious actors.
 - Server does not store any session identifiers or cookies.
+- Sql queries have parameterized user and llm inputs.
+- Chat is sanitized with ngx-markdown to prevent xss attacks.
+- Dependencies were last checked 13.4.2024, they are up to date and no vulnerabilities were found were found in production dependencies. Vulnerability checks were done with npm audit and https://pypi.org/project/safety/ library.
+- Simple user prompt validation and chat history and retrieved documents are truncated to prevent exceeding LLM context window.
 
 ## Setup
 
+Auth0:
+Create a new application, set the application type to Regular Web Application. Configure Allowed Callback URLs, Allowed Logout URLs and Allowed Web Origins to the frontend domain. Set the RS256 signing algorithm. Create a new API and set the Identifier to the API audience.
+Create an admin role and assign it to the admin user. Then add custom claims to accessToken with custom action in login flow. For example:
+
+```javascript
+exports.onExecutePostLogin = async (event, api) => {
+  const namespace = "https://my-app.example.com";
+  if (event.authorization) {
+    api.accessToken.setCustomClaim(
+      `${namespace}/roles`,
+      event.authorization.roles
+    );
+    api.idToken.setCustomClaim(`${namespace}/roles`, event.authorization.roles);
+  }
+};
+```
+
+Then enable Attack protection settings such as brute force protection and other settings.
+
+UI:
+
+In environment.ts set the auth0 configuration and the api url.
+Then run:
+
+```bash
+npm install
+ng serve
+```
+
+API:
+
+install the requirements from requirements.txt
+Set the environment variables in .env file.
+AUTH0_DOMAIN=#auth0 domain
+AUTH0_AUDIENCE=#auth0 audience
+AUTH_NAMESPACE=#auth0 namespace
+OPENAI_API_KEY=#openai api key
+
+initialize the database with:
+
+```bash
+flask --app api init-db
+```
+
+Run the application with:
+
+```bash
+flask --app api run # optional --debug
+```
+
+Creating vector store (optional):
+Collect documents from owasp.org or another source and save them in csv format (or any other format with supported loaders). Then run the notebook in api/notebooks to create the vector store.
+
 ## Testing
+
+TODO:
 
 ## Known security issues or vulnerabilities
 
 Email verification is not implemented as it is not available in the auth0 free tier. This means that users can create accounts with fake email addresses. The issue is mitigated by enabling threat detection in auth0 which will block users with suspicious behavior.
 
+MFA is not implemented.
+
+Due to the chosen authentication solution, tokens are not revoked when a user logs out. This means that if a token is stolen, it can be used until it expires. This is mitigated by setting a short expiration time for the tokens.
+
+It's possible that LLM generates malicious links.
+
 ## Future improvements
+
+- Automated alerts for rate limiting and other security events.
+- Logging of all requests and logging of UI errors.
+- Improved sanitization of chat messages.
+- CI/CD pipeline for the application.
+- Streaming of the LLM responses.
+- Generating representative titles for the conversations.
+- Feature to publish and share conversations.
+- Integration with tts and stt services.
+- Support for multiple LLM models, preferrably local.
