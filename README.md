@@ -109,6 +109,12 @@ Collect documents from owasp.org or another source and save them in csv format (
 
 TODO:
 
+```bash
+ssh-keygen -t rsa -b 2048 -m PEM -f jwtRS256.key
+# Don't add passphrase
+openssl rsa -in jwtRS256.key -pubout -outform PEM -out jwtRS256.key.pub
+```
+
 ## Known security issues or vulnerabilities
 
 Email verification is not implemented as it is not available in the auth0 free tier. This means that users can create accounts with fake email addresses. The issue is mitigated by enabling threat detection in auth0 which will block users with suspicious behavior.
@@ -130,3 +136,7 @@ It's possible that LLM generates malicious links.
 - Feature to publish and share conversations.
 - Integration with tts and stt services.
 - Support for multiple LLM models, preferrably local.
+
+```
+
+```

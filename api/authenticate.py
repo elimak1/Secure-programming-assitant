@@ -9,12 +9,17 @@ from authlib.integrations.flask_oauth2 import ResourceProtector
 
 
 class Auth0JWTBearerTokenValidator(JWTBearerTokenValidator):
-    def __init__(self, domain, audience):
+    def __init__(self, domain, audience, dev_public_key=None):
         issuer = f"https://{domain}/"
-        jsonurl = urlopen(f"{issuer}.well-known/jwks.json")
-        public_key = JsonWebKey.import_key_set(
-            json.loads(jsonurl.read())
-        )
+        if dev_public_key:
+            if isinstance(dev_public_key, str):
+                dev_public_key = json.loads(dev_public_key)
+            public_key = JsonWebKey.import_key_set(dev_public_key)
+        else:
+            jsonurl = urlopen(f"{issuer}.well-known/jwks.json")
+            public_key = JsonWebKey.import_key_set(
+                json.loads(jsonurl.read())
+            )
         super(Auth0JWTBearerTokenValidator, self).__init__(
             public_key
         )
@@ -26,13 +31,13 @@ class Auth0JWTBearerTokenValidator(JWTBearerTokenValidator):
 
 load_dotenv()
 require_auth = ResourceProtector()
-validator = Auth0JWTBearerTokenValidator(
+default_validator = Auth0JWTBearerTokenValidator(
     os.getenv("AUTH0_DOMAIN"),
-    os.getenv("AUTH0_AUDIENCE")
+    os.getenv("AUTH0_AUDIENCE"),
 )
-require_auth.register_token_validator(validator)
 
+def register_token_validator(validator=default_validator):
+    require_auth.register_token_validator(validator)
 
 def getResourceProtector():
     return require_auth
-

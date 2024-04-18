@@ -3,6 +3,8 @@ import os
 from flask import Flask, jsonify
 from flask_cors import CORS
 from .core import limiter
+from .authenticate import register_token_validator, Auth0JWTBearerTokenValidator
+from .tests.token_utils import pubkey_to_jwks
 
 def create_app(test_config=None) -> Flask:
     
@@ -11,18 +13,14 @@ def create_app(test_config=None) -> Flask:
 
     CORS(app, resources={r"/*": {"origins": "http://localhost:4200"}})
 
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-    )
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
+
+    if test_config:
+        app.config.update(test_config)
     else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
-
+            app.config.from_mapping(
+                {"DATABASE": os.path.join(app.instance_path, "flaskr.sqlite")},
+            )
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
@@ -30,6 +28,19 @@ def create_app(test_config=None) -> Flask:
         pass
 
     register_error_handler(app)
+
+    if test_config and 'JWT_PUBLIC_KEY' in test_config:
+        # Set up with custom test validator
+        public_key = pubkey_to_jwks(test_config['JWT_PUBLIC_KEY'])
+        validator = Auth0JWTBearerTokenValidator(
+            test_config.get('AUTH0_DOMAIN', 'test_domain'),
+            test_config.get('AUTH0_AUDIENCE', 'test_audience'),
+            public_key
+        )
+        register_token_validator(validator)
+    else:
+        # Default production setup
+        register_token_validator()
     
     from api.db import db_utils
     db_utils.init_app(app)

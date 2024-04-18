@@ -29,10 +29,11 @@ Login and registrations -> https://auth0.com/ DONE
 
 --  Chat management - load and display old chats Done
 
--- CREATE COMPREHENSIVE documentation
+-- CREATE COMPREHENSIVE documentation in progress
 
 -- Unit testing
 
+-- improve authenticate.py and core.py
 --  Implement sanitization and validation Needs testing
 
 -- Comment code
@@ -42,8 +43,6 @@ Login and registrations -> https://auth0.com/ DONE
 -- Penetration testing
 -- Document
 -- Implement monitoring and logging 
-
--- owasp llm top 10
 
 
 __________ Additional features
