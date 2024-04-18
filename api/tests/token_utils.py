@@ -22,7 +22,6 @@ def create_test_token():
         "kid": "test_key_id"
     }
     token = jwt.encode(payload, private_key, algorithm="RS256", headers=headers)
-    print
     return token
 
 def pubkey_to_jwks(pubkey_path):

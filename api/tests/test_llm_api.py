@@ -1,4 +1,13 @@
 from api.tests.token_utils import create_test_token
+from unittest.mock import patch
+import pytest
+
+# Mock LLM calling
+@pytest.fixture
+def mockLLM():
+    with patch('api.langchain_utils.openai.invokeLLM') as mockinvokeLLM:
+        mockinvokeLLM.return_value = "Hi, how is it going?"
+        yield mockinvokeLLM
 
 def test_ping(client):
     response = client.get('/ping' )

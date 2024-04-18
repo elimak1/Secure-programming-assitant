@@ -27,6 +27,10 @@ def init_db() -> None:
     with current_app.open_resource('db/schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
+def clean_db() -> None:
+    db = get_db()
+    db.execute('DELETE FROM chat_history')
+    db.commit()
 
 @click.command('init-db')
 def init_db_command():

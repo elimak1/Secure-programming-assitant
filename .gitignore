@@ -4,7 +4,7 @@
 __pycache__/
 
 instance/
-
+*.sqlite
 .pytest_cache/
 .coverage
 htmlcov/
