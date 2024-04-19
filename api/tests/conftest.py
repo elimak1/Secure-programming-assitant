@@ -3,6 +3,8 @@ import pytest
 
 from .. import create_app
 from ..db.db_utils import init_db, clean_db
+from unittest.mock import patch
+import pytest
 
 
 @pytest.fixture
@@ -29,4 +31,11 @@ def reset_db(app):
 @pytest.fixture()
 def client(app):
     return app.test_client()
+
+# Mock LLM calling
+@pytest.fixture(autouse=True)
+def mockLLM():
+    with patch('api.langchain_utils.openai.invokeLLM') as mockinvokeLLM:
+        mockinvokeLLM.return_value = "Hi, how is it going?"
+        yield mockinvokeLLM
 

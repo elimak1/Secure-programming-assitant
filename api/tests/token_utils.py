@@ -5,17 +5,20 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 import base64
 import json
+import os
 
-def create_test_token():
+def create_test_token(sub="test_user_id"):
     with open("tests/test_keys/jwtRS256.key", "r") as key_file:
         private_key = key_file.read()
     expires_delta=timedelta(minutes=60)
+    AUTH_NAMESPACE = os.getenv("AUTH_NAMESPACE")
     payload = {
         "iss": "https://test_domain/",
         "aud": "test_audience",
         "exp": datetime.now(UTC) + expires_delta,
-        "sub": "test_user_id", 
+        "sub": sub, 
         "iat":  datetime.now(UTC),
+        f"{AUTH_NAMESPACE}/roles": []
     }
     headers = {
         "alg": "RS256",
