@@ -107,13 +107,51 @@ Collect documents from owasp.org or another source and save them in csv format (
 
 ## Testing
 
-TODO:
+Unit testing
+
+Flask application is tested with pytest. Run the tests in api folder by running:
 
 ```bash
-ssh-keygen -t rsa -b 2048 -m PEM -f jwtRS256.key
-# Don't add passphrase
-openssl rsa -in jwtRS256.key -pubout -outform PEM -out jwtRS256.key.pub
+pytest
 ```
+
+Unit tests use token pair located in api/tests/test_keys.
+In addition LLM calling is mocked in the tests.
+Unit tests cover the core functionality of the application, authentication, rate limiting and and injection prevention.
+
+### Manual security testing:
+
+1.  Expected: Login and wait for 30 minutes. Try to access the application again. The session should be expired and the user should be redirected to the login page.
+    Result:
+
+-
+
+2.  Expected: Application can't be accessed After logout. Ensure that routes other than dashboard, and api can't be accesed after logout
+    Result:
+
+-
+
+3. Expected: Ensure that all buttons, links and inputs are working as expected.
+   Result: -
+
+4. Expected: Error handling is working. Send a request with a missing parameter. The server should return a 400 status code. Make sure error response is sent if prompt fails.
+   Result: -
+
+5. Expected: Injection prevention is working. Send a request with a malicious prompt, or malicious chatId, behavoir should be same as with any other input.
+   Result: -
+
+6. Expected: XSS prevention is working. The script should not be executed in the browser.
+   Result: TODO: - simple alert, inline script, onpointerevent, url parameters
+   https://portswigger.net/web-security/cross-site-scripting/cheat-sheet
+
+7. Expected: CSRF prevention is working. Attempt to send requests from another domain. The server should return a 403 status code.
+   Result: -
+
+8. Expected: Prompts are validated. Send a request with a prompt that is too long. The server should return a 400 status code. Also try different prompt injections.
+   Result: -
+
+9. Expected: Try to make LLM generate a malicious link, which sends chat messages to a different server. This should not be possible.
+   Result: -
 
 ## Known security issues or vulnerabilities
 
@@ -127,6 +165,7 @@ It's possible that LLM generates malicious links.
 
 ## Future improvements
 
+- Deploy the application
 - Automated alerts for rate limiting and other security events.
 - Logging of all requests and logging of UI errors.
 - Improved sanitization of chat messages.
@@ -136,7 +175,3 @@ It's possible that LLM generates malicious links.
 - Feature to publish and share conversations.
 - Integration with tts and stt services.
 - Support for multiple LLM models, preferrably local.
-
-```
-
-```

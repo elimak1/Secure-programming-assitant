@@ -31,21 +31,20 @@ Login and registrations -> https://auth0.com/ DONE
 
 -- CREATE COMPREHENSIVE documentation in progress
 
--- Unit testing
+-- Unit testing Done
 
--- improve authenticate.py and core.py
 --  Implement sanitization and validation Needs testing
-
 -- Comment code
 :::: Security measures
 -- Check OWASP top 10
  (pay attention to  XSS, CSRF, SSRF)
 -- Penetration testing
 -- Document
--- Implement monitoring and logging 
 
 
 __________ Additional features
+
+-- Implement monitoring and logging 
 
 -- Prevent chat leaking attack (remove query params from links?)
 
