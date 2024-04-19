@@ -13,6 +13,7 @@ dist/
 build/
 
 .env
+.notes
 
 documents/
 
