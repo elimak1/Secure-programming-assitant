@@ -6,6 +6,7 @@ import { Message } from '../../models/types'
 import moment from 'moment'
 import { AuthService } from '@auth0/auth0-angular'
 import { ToastrService } from 'ngx-toastr'
+import e from 'express'
 
 @Injectable({
   providedIn: 'root'
@@ -40,9 +41,7 @@ export class HttpService {
     chatId: string | undefined
   ): Observable<Message | undefined> {
     return this.httpClient
-      .post<Message>(`${environment.apiUri}/chat/${chatId ?? ''}`, {
-        prompt
-      })
+      .post<Message>(`${environment.apiUri}/chat/${chatId ?? ''}`, { prompt })
       .pipe(catchError(this.handleError.bind(this)))
   }
 
@@ -71,6 +70,12 @@ export class HttpService {
       setTimeout(() => {
         this.authService.logout()
       }, 2000)
+    } else {
+      if (typeof error.error === 'string') {
+        this.toastr.error(error.error, 'Error')
+      } else {
+        this.toastr.error('An error occurred', error.statusText)
+      }
     }
     return of(undefined)
   }

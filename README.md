@@ -122,36 +122,44 @@ Unit tests cover the core functionality of the application, authentication, rate
 ### Manual security testing:
 
 1.  Expected: Login and wait for 30 minutes. Try to access the application again. The session should be expired and the user should be redirected to the login page.
+
     Result:
+    On first attempt the token expiration was incorrectly set and user would not be logged out after expirations. After fixing the issues it worked as expected.
 
--
+2.  Expected: Application can't be accessed After logout. Rroutes other than dashboard or api can't be used after logout
 
-2.  Expected: Application can't be accessed After logout. Ensure that routes other than dashboard, and api can't be accesed after logout
-    Result:
+    Result: OK
 
--
+3.  Expected: Ensure that all buttons, links and inputs are working as expected.
 
-3. Expected: Ensure that all buttons, links and inputs are working as expected.
-   Result: -
+    Result: Fixed sidebar cursor not begin a pointer. OK.
 
-4. Expected: Error handling is working. Send a request with a missing parameter. The server should return a 400 status code. Make sure error response is sent if prompt fails.
-   Result: -
+4.  Expected: Error handling is working. Send a request with a missing parameter. The server should return a 400 status code. Make sure error response is sent if prompt fails.
 
-5. Expected: Injection prevention is working. Send a request with a malicious prompt, or malicious chatId, behavoir should be same as with any other input.
-   Result: -
+    Result: Tested with missing parameters and requsts and caused intential errors with LLM, errors were handled correctly. Error descriptions shown to user could be improved.
 
-6. Expected: XSS prevention is working. The script should not be executed in the browser.
-   Result: TODO: - simple alert, inline script, onpointerevent, url parameters
-   https://portswigger.net/web-security/cross-site-scripting/cheat-sheet
+5.  Expected: Injection prevention is working. Send a request with a malicious prompt, or malicious chatId, behavoir should be same as with any other input.
 
-7. Expected: CSRF prevention is working. Attempt to send requests from another domain. The server should return a 403 status code.
-   Result: -
+    Result: Attempted various injections, no issues found.
 
-8. Expected: Prompts are validated. Send a request with a prompt that is too long. The server should return a 400 status code. Also try different prompt injections.
-   Result: -
+6.  Expected: XSS prevention is working. The script should not be executed in the browser.
 
-9. Expected: Try to make LLM generate a malicious link, which sends chat messages to a different server. This should not be possible.
-   Result: -
+    Result: Tested various attacks from https://portswigger.net/web-security/cross-site-scripting/cheat-sheet
+    All attacks were sanitized and prevented.
+
+7.  Expected: CSRF prevention is working. Attempt to send requests from another domain. The server should return a 403 status code.
+
+    Result: Prevented due to using authorization header and not using session cookies to authenticate.
+
+8.  Expected: Prompts are validated. Send a request with a prompt that is too long. The server should return a 400 status code. Also try different prompt injections.
+
+    Result: Prompts are validated and sanitized. No issues found.
+
+9.  Expected: Try to make LLM generate a malicious link, which sends chat messages to a different server. This should not be possible.
+
+    Result: Could create some malicious links, and was able to leak some of the conversation using gpt-4 but gpt-3 generated some nonsense. Should look for ways to mitigate.
+
+    Attacke could be performed by having a malicious instructions in the llm training data.
 
 ## Known security issues or vulnerabilities
 

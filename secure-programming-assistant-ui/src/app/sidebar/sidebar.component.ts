@@ -1,9 +1,7 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { AuthService, GenericError } from '@auth0/auth0-angular'
-import { HttpService } from '../services/http.service'
+import { AuthService } from '@auth0/auth0-angular'
 import { Router } from '@angular/router'
-import { filter, mergeMap } from 'rxjs/operators'
 
 @Component({
   selector: 'app-sidebar',
@@ -16,7 +14,6 @@ export class SidebarComponent {
   public username: string | undefined
   constructor(
     private authService: AuthService,
-    private httpService: HttpService,
     private router: Router
   ) {}
 

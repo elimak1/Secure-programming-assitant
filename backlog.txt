@@ -36,10 +36,10 @@ Login and registrations -> https://auth0.com/ DONE
 --  Implement sanitization and validation Needs testing
 -- Comment code
 :::: Security measures
--- Check OWASP top 10
+-- Check OWASP top 10 DONE
  (pay attention to  XSS, CSRF, SSRF)
--- Penetration testing
--- Document
+-- Penetration testing DONE
+-- Document DONE
 
 
 __________ Additional features
