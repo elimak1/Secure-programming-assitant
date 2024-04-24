@@ -1,8 +1,9 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { AuthService } from '@auth0/auth0-angular'
+import { AuthService, GenericError } from '@auth0/auth0-angular'
 import { HttpService } from '../services/http.service'
 import { Router } from '@angular/router'
+import { filter, mergeMap } from 'rxjs/operators'
 
 @Component({
   selector: 'app-sidebar',

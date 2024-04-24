@@ -48,7 +48,7 @@ export class ChatsComponent {
     this.authService.user$.subscribe((user) => {
       if (user) {
         this.httpService.getChats().subscribe((chats) => {
-          this.dataSource.data = chats
+          this.dataSource.data = chats ?? []
           this.isLoading = false
         })
       }

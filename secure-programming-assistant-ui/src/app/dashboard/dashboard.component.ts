@@ -50,7 +50,7 @@ export class DashboardComponent {
       this.currentChatId = chatId
       this.isLoading = true
       this.httpService.getChat(chatId).subscribe((chats) => {
-        this.currentChatMessages = chats
+        this.currentChatMessages = chats ?? []
         this.isLoading = false
         this.scrollToBottom()
       })
