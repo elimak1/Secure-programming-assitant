@@ -31,6 +31,7 @@ class Auth0JWTBearerTokenValidator(JWTBearerTokenValidator):
         super(Auth0JWTBearerTokenValidator, self).__init__(
             public_key
         )
+        # SPS: required claims for the token
         self.claims_options = {
             "exp": {"essential": True},
             "aud": {"essential": True, "value": audience},

@@ -14,6 +14,7 @@ def create_app(test_config: None|dict =None) -> Flask:
     app = Flask(__name__, instance_relative_config=True)
     limiter.init_app(app)
 
+    # SPS: Allow CORS for the frontend
     CORS(app, resources={r"/*": {"origins": "http://localhost:4200"}})
 
 

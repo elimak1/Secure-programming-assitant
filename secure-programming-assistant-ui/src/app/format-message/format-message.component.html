@@ -1,6 +1,8 @@
 <div>
-<p *ngIf="showEntity"> <b> {{message?.from_entity?? ''}}</b>:</p>
-<markdown>{{message?.text ?? ''}}
-</markdown>
+  <p *ngIf="showEntity">
+    <b> {{ message?.from_entity ?? '' }}</b
+    >:
+  </p>
+  <!-- SPS: markdwon module is used to sanitize the message text -->
+  <markdown>{{ message?.text ?? '' }} </markdown>
 </div>
-

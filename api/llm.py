@@ -12,6 +12,7 @@ bp = Blueprint('llm', __name__)
 
 require_auth = getResourceProtector()
 
+# SPS: Rate limit the llm endpoints to 4 requests per second.
 limiter.limit('4/second')(bp) 
 
 @bp.route('/ping', methods=['GET'])
@@ -39,6 +40,7 @@ def chats():
     chatHistoryFirstMessages = [cleanChatHistory(dict(row)) for row in chatHistoryFirstMessages]
     return jsonify(chatHistoryFirstMessages)
 
+# SPS: Require_auth decorator is used to ensure that the user is authenticated before accessing the chat endpoint.
 @bp.route('/chat/<chat_id>', methods=['GET', 'POST', 'DELETE'])
 @bp.route('/chat/', methods=['GET', 'POST', 'DELETE'], defaults={'chat_id': None})
 @limiter.limit(limit_value=get_prompt_limit_from_config, methods=['POST'], override_defaults=False, error_message='Rate limit exceeded' )
@@ -53,11 +55,14 @@ def chat(chat_id):
     """
 
     token = require_auth.acquire_token()
+
+    # SPS: Use the sub claim from the token to identify the user.
     userId =  token.get('sub')
 
     chatId =chat_id
     db = get_db()
     if chatId is not None:
+        # SPS: Queries are parameterized.
         chatMessages = db.execute(
             """SELECT * FROM chat_history WHERE user_id = ? AND conversation_id = ?
             ORDER BY message_order ASC""",
@@ -74,7 +79,8 @@ def chat(chat_id):
         prompt = request.json.get('prompt')
         if prompt is None:
             return Response(status=400, response="Prompt not provided")
-
+        
+        # SPS: Validate the prompt before sending it to the model.
         validatePromptResponse = validatePrompt(prompt)
         if validatePromptResponse is not None:
             return validatePromptResponse

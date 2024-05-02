@@ -40,7 +40,7 @@ Structure of the repository:
 ## Secure programming solutions
 
 - Follows Oauth2.0 protocol.
-- Access control is implemented by requiring a valid access token in the Authorization header. The JWT token uses RS256 algorithm for signing and the public key is obtained from auth0. The token is verified in api/authenticate.py. All routes require a valid token except for the /ping route and user data is only accessed using the user_id from the token. In addition the admin role is accessed from the token and used to determine if the user is an admin.
+- Access control is implemented by requiring a valid access token in the Authorization header. The JWT token uses RS256 algorithm for signing and the public key is obtained from auth0. The token is verified in api/authenticate.py. All routes require a valid token and user data is only accessed using the user_id from the token. In addition the admin role is accessed from the token and used to determine if the user is an admin.
 - Allowed CORS origins are set to the frontend domain in the Flask application.
 - All login and registration attempts are logged by Auth0.
 - Api is rate limited by ip to 4 requestes per second and chat prompt api is further limited to 50 per hour or 100 per day to non admin users. In Auth0 threat protection is prevent access to bots and other malicious actors.
@@ -49,6 +49,8 @@ Structure of the repository:
 - Chat is sanitized with ngx-markdown to prevent xss attacks.
 - Dependencies were last checked 13.4.2024, they are up to date and no vulnerabilities were found were found in production dependencies. Vulnerability checks were done with npm audit and https://pypi.org/project/safety/ library.
 - Simple user prompt validation and chat history and retrieved documents are truncated to prevent exceeding LLM context window.
+
+Some examples of the solutions are marked in the code comments with SPS: prefix
 
 ## Setup
 
