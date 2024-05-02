@@ -22,6 +22,9 @@ def test():
 @bp.route('/chats', methods=['GET'])
 @require_auth(None)
 def chats():
+    """
+    Get the first message of each chat the user has had.
+    """
     token = require_auth.acquire_token()
     userId =  token.get('sub')
 
@@ -41,6 +44,14 @@ def chats():
 @limiter.limit(limit_value=get_prompt_limit_from_config, methods=['POST'], override_defaults=False, error_message='Rate limit exceeded' )
 @require_auth(None)
 def chat(chat_id):
+    """
+    Handle chat messages.
+    
+    GET: Get all chat messages of a conversations.
+    POST: Send a message to an existing conversation or if no chat_id provided create a new conversation.
+    DELETE: Delete a conversation.
+    """
+
     token = require_auth.acquire_token()
     userId =  token.get('sub')
 
@@ -89,7 +100,9 @@ def chat(chat_id):
 
 
 def saveChat(chatHistory: list, userId: str, chatId: str | None, prompt: str, response:str ) -> dict:
-    # Save prompt
+    """
+    Save user prompt and the response from the model to the database.
+    """
 
     if chatId is None:
         chatId = str(uuid4())
@@ -116,6 +129,9 @@ def saveChat(chatHistory: list, userId: str, chatId: str | None, prompt: str, re
 
 
 def cleanChatHistory(chatHistory: dict) -> dict:
+    """
+    Clean the chat history object to remove unnecessary fields.
+    """
     del chatHistory['user_id']
     del chatHistory['id']
     del chatHistory['message_order']
@@ -124,6 +140,9 @@ def cleanChatHistory(chatHistory: dict) -> dict:
     return chatHistory
 
 def validatePrompt(prompt: str) -> Response | None:
+    """
+    Validate the prompt to ensure it is not too long.
+    """
     if len(prompt) > 10000:
         return Response(status=400, response="Prompt too long")
     return None

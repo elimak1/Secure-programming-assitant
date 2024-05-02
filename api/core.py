@@ -12,7 +12,10 @@ AUTH_NAMESPACE = os.getenv("AUTH_NAMESPACE")
 
 assert AUTH_NAMESPACE, "AUTH_NAMESPACE not set"
 
-def get_prompt_limit_from_config():
+def get_prompt_limit_from_config() -> str:
+    """
+    Get prompting rate limit from the configuration, based on the user's role.
+    """
     token = require_auth.acquire_token()
     roles = token.get(f"{AUTH_NAMESPACE}/roles")
     if "admin" in roles:

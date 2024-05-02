@@ -9,7 +9,15 @@ from authlib.integrations.flask_oauth2 import ResourceProtector
 
 
 class Auth0JWTBearerTokenValidator(JWTBearerTokenValidator):
-    def __init__(self, domain, audience, dev_public_key=None):
+    def __init__(self: "Auth0JWTBearerTokenValidator", domain: str, audience: str, dev_public_key: str | None | dict=None):
+        """
+        Initialize the Auth0 JWT Bearer Token Validator.
+
+        Args:
+            domain (str): The Auth0 domain.
+            audience (str): The audience for the token.
+            dev_public_key (str | None | dict): The public key to use for token validation.
+        """
         issuer = f"https://{domain}/"
         if dev_public_key:
             if isinstance(dev_public_key, str):
@@ -36,8 +44,8 @@ default_validator = Auth0JWTBearerTokenValidator(
     os.getenv("AUTH0_AUDIENCE"),
 )
 
-def register_token_validator(validator=default_validator):
+def register_token_validator(validator: Auth0JWTBearerTokenValidator=default_validator) -> None:
     require_auth.register_token_validator(validator)
 
-def getResourceProtector():
+def getResourceProtector() -> ResourceProtector:
     return require_auth

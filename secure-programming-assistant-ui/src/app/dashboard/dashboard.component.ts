@@ -46,6 +46,7 @@ export class DashboardComponent {
 
     const queryParams = new URLSearchParams(window.location.search)
     const chatId = queryParams.get('chatId')
+    // If chatId is present in the URL, fetch the chat
     if (chatId) {
       this.currentChatId = chatId
       this.isLoading = true

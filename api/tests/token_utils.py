@@ -7,7 +7,10 @@ import base64
 import json
 import os
 
-def create_test_token(sub="test_user_id"):
+def create_test_token(sub: str="test_user_id") -> str:
+    """
+    Create a test JWT token for testing purposes.
+    """
     with open("tests/test_keys/jwtRS256.key", "r") as key_file:
         private_key = key_file.read()
     expires_delta=timedelta(minutes=60)
@@ -27,7 +30,10 @@ def create_test_token(sub="test_user_id"):
     token = jwt.encode(payload, private_key, algorithm="RS256", headers=headers)
     return token
 
-def pubkey_to_jwks(pubkey_path):
+def pubkey_to_jwks(pubkey_path: str) -> str:
+    """
+    Convert a public key to a JWKS JSON string.
+    """
     with open(pubkey_path, "rb") as key_file:
         public_key = serialization.load_pem_public_key(
             key_file.read(),

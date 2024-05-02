@@ -6,7 +6,10 @@ from .core import limiter
 from .authenticate import register_token_validator, Auth0JWTBearerTokenValidator
 from .tests.token_utils import pubkey_to_jwks
 
-def create_app(test_config=None) -> Flask:
+def create_app(test_config: None|dict =None) -> Flask:
+    """
+    Create and configure an instance of the Flask application.
+    """
     
     app = Flask(__name__, instance_relative_config=True)
     limiter.init_app(app)
@@ -50,7 +53,11 @@ def create_app(test_config=None) -> Flask:
 
     return app
 
-def register_error_handler(app):
+def register_error_handler(app: Flask)-> Flask:
+    """
+    Register error handlers for the app.
+    Uses json responses for errors.
+    """
     def ratelimit_handler(e):
         return jsonify(error=429, message=str(e.description)), 429
     

@@ -21,7 +21,10 @@ VECTOR_STORE_PATH = "./vector_store/owasp_faiss"
 OPENAIKEY = os.getenv('OPENAI_API_KEY')
 assert OPENAIKEY, 'OPENAIKEY not set'
 
-def init_openai_agent() -> AgentExecutor:
+def init_openai_agent() -> tuple[AgentExecutor, ChatOpenAI]:
+    """
+    Initialize the OpenAI agent and return it along with the ChatOpenAI object.
+    """
     llm = ChatOpenAI(openai_api_key=OPENAIKEY)
 
     tools = []
@@ -77,11 +80,14 @@ def init_openai_agent() -> AgentExecutor:
     return agent_executor, llm
 
 def condense_prompt(prompt: ChatPromptValue) -> ChatPromptValue:
+    """
+    Condense the prompt to be 10000 tokens, so it is below gpt-3.5 limit.
+    """
     messages = prompt.to_messages()
     llm = get_openai_llm()
     num_tokens = llm.get_num_tokens_from_messages(messages)
     ai_function_messages = messages[1:]
-    while num_tokens > 8000:
+    while num_tokens > 10000:
         ai_function_messages = ai_function_messages[1:]
         num_tokens = llm.get_num_tokens_from_messages(
             messages[:1] + ai_function_messages
@@ -90,6 +96,9 @@ def condense_prompt(prompt: ChatPromptValue) -> ChatPromptValue:
     return ChatPromptValue(messages=messages)
 
 def get_openai_agent() -> AgentExecutor:
+    """
+    Get the OpenAI agent from the global context. If it does not exist, initialize it.
+    """
     if 'openai_agent' not in g:
         agent, llm = init_openai_agent()
         g.openai_agent = agent
@@ -97,6 +106,9 @@ def get_openai_agent() -> AgentExecutor:
     return g.openai_agent
 
 def get_openai_llm() -> ChatOpenAI:
+    """
+    Get the ChatOpenAI object from the global context. If it does not exist, initialize it.
+    """
     if 'llm' not in g:
         agent, llm = init_openai_agent()
         g.openai_agent = agent
@@ -106,6 +118,9 @@ def get_openai_llm() -> ChatOpenAI:
 
 
 def invokeLLM(prompt: str, history: list = []) -> str:
+    """
+    Invoke the OpenAI agent with the given prompt and history.
+    """
     chat_history = []
     for msg in history:
         if msg["from_entity"] == "User":
