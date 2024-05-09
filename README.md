@@ -1,5 +1,7 @@
 # Secure programming assistant
 
+_This readme serves as the documentations for the project submission_
+
 The application is a secure programming assistant that helps users to create secure applications. Logged in users can chat with the assitant which is using GPT-3.5 and using documents scraped from owasp.org as potential retrieved content to give user's up to date information on secure programming practices.
 
 Main features of the application
