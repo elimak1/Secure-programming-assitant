@@ -87,6 +87,7 @@ ng serve
 
 API:
 
+Tested with python 3.12.2
 install the requirements from requirements.txt
 Set the environment variables in .env file.
 AUTH0_DOMAIN=#auth0 domain
